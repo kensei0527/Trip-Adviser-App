@@ -1,0 +1,59 @@
+//
+//  AuthenScreen.swift
+//  Projissen_last
+//
+//  Created by 古家健成 on 2024/06/11.
+//
+
+import SwiftUI
+import FirebaseAuth
+
+struct AuthenScreen: View {
+    @EnvironmentObject var viewModel: AuthViewModel
+    
+    var body: some View {
+        NavigationView {
+            if viewModel.isSignedIn {
+                HomeScreen()
+            } else {
+                SignInView()
+            }
+        }
+        .onAppear {
+            viewModel.isSignedIn = Auth.auth().currentUser != nil
+        }
+    }
+}
+
+struct SignInView: View {
+    @State private var email = ""
+    @State private var password = ""
+    @EnvironmentObject var viewModel: AuthViewModel
+    
+    var body: some View {
+        VStack {
+            TextField("Email", text: $email)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            SecureField("Password", text: $password)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            Button(action: {
+                viewModel.signIn(email: email, password: password)
+            }) {
+                Text("Sign In")
+            }
+            .padding()
+            
+            Button(action: {
+                viewModel.signUp(email: email, password: password)
+            }) {
+                Text("Sign Up")
+            }
+            .padding()
+        }
+        .padding()
+    }
+}
