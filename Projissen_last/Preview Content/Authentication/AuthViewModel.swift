@@ -10,6 +10,7 @@ import FirebaseAuth
 
 class AuthViewModel: ObservableObject {
     @Published var isSignedIn = false
+    @Published var user: User? = nil
     
     private var authStateDidChangeListenerHandle: AuthStateDidChangeListenerHandle?
     

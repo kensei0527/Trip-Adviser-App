@@ -14,6 +14,7 @@ struct HomeScreen: View {
         TabView(selection: $selection,
                 content:  {
             HomeTabScreen().tabItem { Label("", systemImage: "house") }
+            //ChatView(chatId: "chatId1").tabItem { Label("", systemImage: "message.fill") }
             
         })
         
