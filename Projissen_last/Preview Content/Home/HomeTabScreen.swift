@@ -53,7 +53,7 @@ struct HomeTabScreen: View {
                         HStack(){
                             
                             VStack {
-                                NavigationLink(destination: NationScreen(), label: {HStack{
+                                NavigationLink(destination: UserListView(), label: {HStack{
                                     Image(systemName: "person").font(.system(size: 30))
                                     Text("User name").font(.system(size: 20))
                                 }})

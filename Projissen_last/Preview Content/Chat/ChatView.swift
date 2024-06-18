@@ -17,7 +17,7 @@ struct ChatView: View {
         VStack {
             List(chatViewModel.messages) { message in
                 HStack {
-                    if message.senderId == authViewModel.user?.uid {
+                    if message.senderId == authViewModel.user?.email {
                         Spacer()
                         Text(message.text)
                             .padding()
@@ -47,7 +47,7 @@ struct ChatView: View {
                     .padding()
                 
                 Button("Send") {
-                    if let senderId = authViewModel.user?.uid {
+                    if let senderId = authViewModel.user?.email {
                         chatViewModel.sendMessage(chatId: chatId, senderId: senderId, text: messageText)
                         messageText = ""
                     }

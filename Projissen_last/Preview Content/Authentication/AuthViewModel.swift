@@ -7,12 +7,16 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 class AuthViewModel: ObservableObject {
     @Published var isSignedIn = false
     @Published var user: User? = nil
-    
+    @Published var errorMessage: String?
+    @Published var isAuthenticated = false
     private var authStateDidChangeListenerHandle: AuthStateDidChangeListenerHandle?
+    
+    private var db = Firestore.firestore()
     
     init() {
         authStateDidChangeListenerHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
@@ -34,20 +38,35 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func signUp(email: String, password: String) {
+    func signUp(email: String, password: String, userName: String) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 print("Error signing up: \(error.localizedDescription)")
             }
+            guard let user = authResult?.user else { return }
+            
+            // Firestoreにユーザー情報を保存
+            self.db.collection("users").document(user.email!).setData([
+                "name": userName,
+                "email": user.email!,
+                "password": password
+            ]) { error in
+                if let error = error {
+                    self.errorMessage = error.localizedDescription
+                } else {
+                    self.isAuthenticated = true
+                }
+            }
+            
         }
-    }
-    
-    func signOut() {
-        do {
-            try Auth.auth().signOut()
-            self.isSignedIn = false
-        } catch let signOutError as NSError {
-            print("Error signing out: \(signOutError.localizedDescription)")
+        
+        func signOut() {
+            do {
+                try Auth.auth().signOut()
+                self.isSignedIn = false
+            } catch let signOutError as NSError {
+                print("Error signing out: \(signOutError.localizedDescription)")
+            }
         }
     }
 }

@@ -6,39 +6,130 @@
 //
 
 import SwiftUI
-
-import UIKit
+import FirebaseFirestore
 
 struct CountryView: View {
-    // 国の名前を含む配列
-    let countries = ["Japan", "USA", "Germany", "France", "Italy"]
+    @StateObject private var viewModel = CountryViewModel()
+    @State private var showingAlert = false
+    @State private var newCountryName = ""
     
     var body: some View {
-        // 各国の名前を表示するVStack
         VStack {
-            ForEach(countries, id: \.self) { country in
-                // 各国ごとに表示するStack
+            ScrollView {
                 VStack {
-                    Text(country)
-                        .font(.largeTitle)
-                        .padding()
-                    // その他のカスタムViewやコンポーネントをここに追加可能
+                    ForEach(viewModel.countries, id: \.self) { country in
+                        /*VStack {
+                            Text(country)
+                                .font(.largeTitle)
+                                .padding()
+                        }
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+                        .padding(.vertical, 5)
+                         */
+                        
+                        NavigationLink(destination: NationScreen(), label: {ZStack {
+                            
+                            GridRow{
+                                RoundedRectangle(cornerSize: .init(width: 20, height: 20))
+                                    .frame(width: 150, height: 150)
+                                
+                            }.zIndex(1)
+                            Text(country).zIndex(2).foregroundColor(.black)
+                        }})
+                    }
                 }
-                .background(Color.blue.opacity(0.1)) // 各国ごとに背景色を設定
-                .cornerRadius(10)
-                .padding(.vertical, 5)
+                .padding()
             }
+            
+            Button(action: {
+                showingAlert = true
+                //ViewController()
+            }) {
+                Text("Add Country")
+                    .font(.title2)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+            .cornerRadius(10)
+            }
+            /*.alert(isPresented: $showingAlert) {
+                Alert(
+                    title: Text("Add New Country"),
+                    message: Text("Enter the name of the country"),
+                    primaryButton: .default(Text("Add"), action: {
+                        if !newCountryName.isEmpty {
+                            viewModel.addCountry(name: newCountryName)
+                            newCountryName = ""
+                        }
+                    }),
+                    secondaryButton: .cancel()
+                )
+            }*/
+            .padding()
         }
-        .padding()
+        .textFieldAlert(isPresented: $showingAlert, text: $newCountryName)
+        
     }
 }
 
-/*truct ContentView_Previews: PreviewProvider {
+struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        CountryView()
     }
-}*/
+}
 
-#Preview{
-    CountryView()
+// Extension to show an alert with a TextField
+struct TextFieldAlert<Presenting>: View where Presenting: View {
+    @Binding var isPresented: Bool
+    @Binding var text: String
+    let presenting: Presenting
+    let title: String
+    let message: String
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                presenting
+                    .blur(radius: isPresented ? 2 : 0)
+                if isPresented {
+                    VStack {
+                        Text(title).font(.headline)
+                        Text(message).font(.subheadline)
+                        TextField("", text: $text)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                        HStack {
+                            Button("Cancel") {
+                                withAnimation {
+                                    isPresented = false
+                                }
+                            }
+                            .padding()
+                            //Spacer()
+                            Button("OK") {
+                                withAnimation {
+                                    isPresented = false
+                                }
+                            }
+                            .padding()
+                        }
+                        .padding()
+                    }
+                    .frame(width: 300, height: 230)
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .shadow(radius: 20)
+                    .transition(.scale)
+                    .zIndex(1)
+                }
+            }
+        }
+    }
+}
+
+extension View {
+    func textFieldAlert(isPresented: Binding<Bool>, text: Binding<String>) -> some View {
+        TextFieldAlert(isPresented: isPresented, text: text, presenting: self, title: "Add New Country", message: "Enter the name of the country")
+    }
 }

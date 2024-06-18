@@ -28,10 +28,15 @@ struct AuthenScreen: View {
 struct SignInView: View {
     @State private var email = ""
     @State private var password = ""
+    @State private var userName = ""
     @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
         VStack {
+            TextField("Username", text: $userName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
             TextField("Email", text: $email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
@@ -48,7 +53,7 @@ struct SignInView: View {
             .padding()
             
             Button(action: {
-                viewModel.signUp(email: email, password: password)
+                viewModel.signUp(email: email, password: password, userName: userName)
             }) {
                 Text("Sign Up")
             }
@@ -57,3 +62,4 @@ struct SignInView: View {
         .padding()
     }
 }
+

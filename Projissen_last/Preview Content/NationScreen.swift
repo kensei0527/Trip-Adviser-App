@@ -6,9 +6,20 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct NationScreen : View {
     var body: some View {
         Text("Hello")
+        Button(action: {signOut()}, label: {Text("signout")})
     }
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+            //self.isSignedIn = false
+        } catch let signOutError as NSError {
+            print("Error signing out: \(signOutError.localizedDescription)")
+        }
+    }
+
 }
