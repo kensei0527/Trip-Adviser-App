@@ -15,7 +15,7 @@ struct UserProfileView: View {
     @State var idRow: Array<String> = []
     @State var chatFlag = false
     @EnvironmentObject var authViewModel: AuthViewModel
-    private var db = Firestore.firestore()
+    var db = Firestore.firestore()
     func createAndStartChat(){
         chatCreationViewModel.createChat(with: user.email) { newChatId in
             if let newChatId = newChatId {
@@ -39,9 +39,10 @@ struct UserProfileView: View {
                     .padding()
                 
                 Button(action: {
-                    guard let currentUserEmail = Auth.auth().currentUser?.email else { return }
+                    //guard let currentUserEmail = Auth.auth().currentUser?.email else { return }
                     //idRow = [currentUserEmail, user.email]
                     //print(idRow[0])
+                    print(user.email)
                     createAndStartChat()
                     //ChatView(chatId: chatId!)
                     
