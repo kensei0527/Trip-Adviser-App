@@ -28,13 +28,21 @@ class CountryViewModel: ObservableObject {
     }
     
     func addCountry(name: String) {
-        db.collection("countries").addDocument(data: ["name": name]) { error in
+        db.collection("countries").document(name).setData(["country": name]){
+            error in
             if let error = error {
                 print("Error adding document: \(error)")
             } else {
                 self.fetchData()
             }
         }
+        //db.collection("countries").addDocument(data: ["name": name]) { error in
+           // if let error = error {
+             //   print("Error adding document: \(error)")
+           // } else {
+             //   self.fetchData()
+           // }
+        //}
     }
 }
 

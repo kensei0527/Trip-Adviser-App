@@ -8,18 +8,21 @@
 import SwiftUI
 import FirebaseAuth
 
-struct NationScreen : View {
-    var body: some View {
-        Text("Hello")
-        Button(action: {signOut()}, label: {Text("signout")})
+struct NationScreen: View {
+    let countryname: String
+    @StateObject private var viewModel: NationScreenModel
+    
+    init(countryName: String) {
+        self.countryname = countryName
+        self._viewModel = StateObject(wrappedValue: NationScreenModel(countryName: countryName))
     }
-    func signOut() {
-        do {
-            try Auth.auth().signOut()
-            //self.isSignedIn = false
-        } catch let signOutError as NSError {
-            print("Error signing out: \(signOutError.localizedDescription)")
+    
+    var body: some View {
+        VStack {
+            Text(viewModel.countryName)
+            ForEach(viewModel.matchingDocumentIDs, id: \.self) { matchUser in
+                Text(matchUser)
+            }
         }
     }
-
 }

@@ -9,12 +9,18 @@
 /* Begin PBXBuildFile section */
 		B116422C2C188ADA00190599 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116422B2C188ADA00190599 /* ChatViewModel.swift */; };
 		B116422E2C188B2D00190599 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116422D2C188B2D00190599 /* ChatView.swift */; };
-		B11642312C19336000190599 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642302C19336000190599 /* SearchView.swift */; };
+		B11642312C19336000190599 /* CountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642302C19336000190599 /* CountryView.swift */; };
 		B11642332C19383B00190599 /* SearchCountryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642322C19383B00190599 /* SearchCountryList.swift */; };
 		B11642352C1BDBB200190599 /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642342C1BDBB100190599 /* UserListView.swift */; };
 		B11642372C1C357700190599 /* UserFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642362C1C357700190599 /* UserFetch.swift */; };
 		B116423A2C1C35E600190599 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642392C1C35E600190599 /* UserProfile.swift */; };
 		B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116BC632C1C43730061F8EE /* ChatCreate.swift */; };
+		B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */; };
+		B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */; };
+		B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */; };
+		B13AF7692C2D0AAD002CAEB3 /* FollowRequestModel2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7682C2D0AAD002CAEB3 /* FollowRequestModel2.swift */; };
+		B13AF76C2C2D0F53002CAEB3 /* UserMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */; };
+		B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF76D2C343D60002CAEB3 /* NationScreenModel.swift */; };
 		B15660242C10AAC100EC1A4A /* Projissen_lastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */; };
 		B15660282C10AAC800EC1A4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B15660272C10AAC800EC1A4A /* Assets.xcassets */; };
 		B156602B2C10AAC800EC1A4A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */; };
@@ -57,12 +63,18 @@
 /* Begin PBXFileReference section */
 		B116422B2C188ADA00190599 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		B116422D2C188B2D00190599 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		B11642302C19336000190599 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		B11642302C19336000190599 /* CountryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryView.swift; sourceTree = "<group>"; };
 		B11642322C19383B00190599 /* SearchCountryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCountryList.swift; sourceTree = "<group>"; };
 		B11642342C1BDBB100190599 /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		B11642362C1C357700190599 /* UserFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFetch.swift; sourceTree = "<group>"; };
 		B11642392C1C35E600190599 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		B116BC632C1C43730061F8EE /* ChatCreate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCreate.swift; sourceTree = "<group>"; };
+		B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowRquestModel.swift; sourceTree = "<group>"; };
+		B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserProfile.swift; sourceTree = "<group>"; };
+		B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile2.swift; sourceTree = "<group>"; };
+		B13AF7682C2D0AAD002CAEB3 /* FollowRequestModel2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowRequestModel2.swift; sourceTree = "<group>"; };
+		B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMapView.swift; sourceTree = "<group>"; };
+		B13AF76D2C343D60002CAEB3 /* NationScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationScreenModel.swift; sourceTree = "<group>"; };
 		B15660202C10AAC100EC1A4A /* Projissen_last.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Projissen_last.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projissen_lastApp.swift; sourceTree = "<group>"; };
 		B15660272C10AAC800EC1A4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -145,8 +157,10 @@
 		B116422F2C19333900190599 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				B11642302C19336000190599 /* SearchView.swift */,
+				B11642302C19336000190599 /* CountryView.swift */,
+				B15660332C11569F00EC1A4A /* NationScreen.swift */,
 				B11642322C19383B00190599 /* SearchCountryList.swift */,
+				B13AF76D2C343D60002CAEB3 /* NationScreenModel.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -154,11 +168,23 @@
 		B11642382C1C35CE00190599 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				B11642392C1C35E600190599 /* UserProfile.swift */,
 				B11642362C1C357700190599 /* UserFetch.swift */,
 				B11642342C1BDBB100190599 /* UserListView.swift */,
+				B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */,
+				B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */,
+				B13AF7682C2D0AAD002CAEB3 /* FollowRequestModel2.swift */,
+				B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */,
 			);
 			path = User;
+			sourceTree = "<group>";
+		};
+		B13AF76A2C2D0C58002CAEB3 /* Non use */ = {
+			isa = PBXGroup;
+			children = (
+				B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */,
+				B11642392C1C35E600190599 /* UserProfile.swift */,
+			);
+			path = "Non use";
 			sourceTree = "<group>";
 		};
 		B15660172C10AAC100EC1A4A = {
@@ -191,13 +217,13 @@
 		B15660292C10AAC800EC1A4A /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				B13AF76A2C2D0C58002CAEB3 /* Non use */,
 				B11642382C1C35CE00190599 /* User */,
 				B116422F2C19333900190599 /* Search */,
 				B116422A2C188AB800190599 /* Chat */,
 				B11642292C188A9700190599 /* Home */,
 				B11642282C188A2100190599 /* Authentication */,
 				B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */,
-				B15660332C11569F00EC1A4A /* NationScreen.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -308,17 +334,23 @@
 			files = (
 				B11642332C19383B00190599 /* SearchCountryList.swift in Sources */,
 				B15660362C15FF8A00EC1A4A /* HomeTabScreen.swift in Sources */,
+				B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */,
+				B13AF7692C2D0AAD002CAEB3 /* FollowRequestModel2.swift in Sources */,
 				B116422C2C188ADA00190599 /* ChatViewModel.swift in Sources */,
 				B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */,
+				B13AF76C2C2D0F53002CAEB3 /* UserMapView.swift in Sources */,
 				B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */,
 				B116422E2C188B2D00190599 /* ChatView.swift in Sources */,
-				B11642312C19336000190599 /* SearchView.swift in Sources */,
+				B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */,
+				B11642312C19336000190599 /* CountryView.swift in Sources */,
 				B15660242C10AAC100EC1A4A /* Projissen_lastApp.swift in Sources */,
 				B15660342C1156A000EC1A4A /* NationScreen.swift in Sources */,
 				B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */,
 				B15660322C10B07E00EC1A4A /* HomeScreen.swift in Sources */,
 				B11642352C1BDBB200190599 /* UserListView.swift in Sources */,
 				B11642372C1C357700190599 /* UserFetch.swift in Sources */,
+				B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */,
+				B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */,
 				B116423A2C1C35E600190599 /* UserProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

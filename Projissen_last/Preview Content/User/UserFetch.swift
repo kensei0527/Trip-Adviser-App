@@ -12,6 +12,7 @@ struct User: Identifiable {
     var id: String
     var name: String
     var email: String
+    var location: String
 }
 
 class UserFetchModel: ObservableObject {
@@ -29,7 +30,8 @@ class UserFetchModel: ObservableObject {
                 let id = document.documentID
                 let name = data["name"] as? String ?? ""
                 let email = data["email"] as? String ?? ""
-                return User(id: id, name: name, email: email)
+                let location = data["location"] as? String ?? ""
+                return User(id: id, name: name, email: email, location: location)
             } ?? []
         }
     }

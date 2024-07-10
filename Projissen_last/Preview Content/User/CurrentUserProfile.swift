@@ -5,4 +5,285 @@
 //  Created by 古家健成 on 2024/06/25.
 //
 
-import Foundation
+import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
+import FirebaseStorage
+import MapKit
+
+struct CurrentUserProfileView: View {
+    @State private var currentUserEmail: String = ""
+    @State private var userLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503)  // デフォルトは東京
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503), span: MKCoordinateSpan(latitudeDelta: 2, longitudeDelta: 2))
+    @State private var showingLocationPicker = false
+    @State private var address: String = ""
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
+    @State private var userName: String = ""
+    @State private var isLoading: Bool = true
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage?
+    @State private var profileImage: Image?
+    
+    private var db = Firestore.firestore()
+    private let storage = Storage.storage().reference()
+    
+    
+    var body: some View {
+        VStack {
+            if isLoading {
+                ProgressView()
+            } else {
+                profileImage?
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                    .shadow(radius: 7)
+                    .padding(.bottom)
+                
+                Button("Change Profile Picture") {
+                    showingImagePicker = true
+                }
+                .padding()
+                
+                Text(userName.isEmpty ? "Loading..." : userName)
+                    .font(.title)
+                    .padding()
+                
+                Text("Your City: \(self.address)")
+            
+                
+                Map(coordinateRegion: $region, annotationItems: [userLocation]) { location in
+                    MapMarker(coordinate: location)
+                }
+                .frame(height: 200)
+                
+                TextField("Enter your City and Country", text: $address)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Update Location") {
+                    updateLocation()
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                
+                Button(action: {signOut()}, label: {Text("Sign Out")})
+                    .padding()
+            }
+        }
+        //.navigationTitle(userName)
+        .onAppear{
+            loadUserData()
+            fetchUserData()
+        }
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Location Update"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+        .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+            ImagePicker(image: $inputImage)
+        }
+        .navigationTitle(userName)
+    }
+    
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        profileImage = Image(uiImage: inputImage)
+        uploadProfileImage()
+    }
+    
+    func uploadProfileImage() {
+        guard let inputImage = inputImage,
+              let imageData = inputImage.jpegData(compressionQuality: 0.5),
+              let userEmail = Auth.auth().currentUser?.email else { return }
+        
+        let imagePath = "profile_images/\(userEmail).jpg"
+        let imageRef = storage.child(imagePath)
+        
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                self.alertMessage = "Error uploading image: \(error.localizedDescription)"
+                self.showingAlert = true
+            } else {
+                imageRef.downloadURL { url, error in
+                    if let downloadURL = url {
+                        self.updateUserProfileImageURL(url: downloadURL.absoluteString)
+                    }
+                }
+            }
+        }
+    }
+    
+    func updateUserProfileImageURL(url: String) {
+        guard let userEmail = Auth.auth().currentUser?.email else { return }
+        
+        db.collection("users").document(userEmail).setData(["profileImageURL": url], merge: true) { error in
+            if let error = error {
+                self.alertMessage = "Error updating profile: \(error.localizedDescription)"
+            } else {
+                self.alertMessage = "Profile picture updated successfully!"
+            }
+            self.showingAlert = true
+        }
+    }
+    
+    func fetchUserData() {
+        guard let user = Auth.auth().currentUser else {
+            print("No user is currently logged in")
+            isLoading = false
+            return
+        }
+        print("email \(String(describing: user.email))")
+        let db = Firestore.firestore()
+        db.collection("users").whereField("email", isEqualTo: user.email ?? "")
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error getting documents: \(error)")
+                    isLoading = false
+                    return
+                }
+                
+                guard let document = querySnapshot?.documents.first else {
+                    print("No matching document")
+                    isLoading = false
+                    return
+                }
+                
+                if let name = document.data()["name"] as? String {
+                    self.userName = name
+                }
+                if let address = document.data()["location"] as? String{
+                    self.address = address
+                }
+                if let profileImageURL = document.data()["profileImageURL"] as? String {
+                    self.loadProfileImage(from: profileImageURL)
+                }
+                
+                isLoading = false
+            }
+    }
+    
+    func loadProfileImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let data = data, let uiImage = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.profileImage = Image(uiImage: uiImage)
+                }
+            }
+        }.resume()
+    }
+    
+    func loadUserData() {
+        if let user = Auth.auth().currentUser {
+            self.currentUserEmail = user.email ?? "No Email"
+            fetchUserLocation()
+        }
+    }
+    
+    func fetchUserLocation() {
+        guard let userEmail = Auth.auth().currentUser?.email else { return }
+        
+        db.collection("users").document(userEmail).getDocument { document, error in
+            if let document = document, document.exists {
+                if let latitude = document.data()?["latitude"] as? Double,
+                   let longitude = document.data()?["longitude"] as? Double {
+                    self.userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    self.region.center = self.userLocation
+                }
+                if let savedAddress = document.data()?["address"] as? String {
+                    self.address = savedAddress
+                }
+            }
+        }
+    }
+    
+    func updateLocation() {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address) { placemarks, error in
+            if let error = error {
+                self.alertMessage = "Error: \(error.localizedDescription)"
+                self.showingAlert = true
+                return
+            }
+            
+            guard let placemark = placemarks?.first,
+                  let location = placemark.location else {
+                self.alertMessage = "Could not find location for the given address."
+                self.showingAlert = true
+                return
+            }
+            
+            self.userLocation = location.coordinate
+            self.region.center = self.userLocation
+            
+            saveLocationToFirestore(location: location.coordinate)
+        }
+    }
+    
+    func saveLocationToFirestore(location: CLLocationCoordinate2D) {
+        guard let userEmail = Auth.auth().currentUser?.email else { return }
+        
+        let userData: [String: Any] = [
+            "latitude": location.latitude,
+            "longitude": location.longitude,
+            "location": address
+        ]
+        
+        db.collection("users").document(userEmail).setData(userData, merge: true) { error in
+            if let error = error {
+                self.alertMessage = "Error saving location: \(error.localizedDescription)"
+            } else {
+                self.alertMessage = "Location updated successfully!"
+            }
+            self.showingAlert = true
+        }
+    }
+    
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+            //self.isSignedIn = false
+        } catch let signOutError as NSError {
+            print("Error signing out: \(signOutError.localizedDescription)")
+        }
+    }
+}
+
+struct ImagePicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Environment(\.presentationMode) var presentationMode
+    
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let parent: ImagePicker
+        
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let uiImage = info[.originalImage] as? UIImage {
+                parent.image = uiImage
+            }
+            
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+    }
+}

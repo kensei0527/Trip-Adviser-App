@@ -6,47 +6,46 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct HomeTabScreen: View {
+    @StateObject var followRequestViewModel = FollowRequestViewModel()
+    @StateObject private var countryViewModel = CountryViewModel()
+    
     var body: some View {
-        NavigationStack{
+        NavigationView{
             TabView {
                 VStack {
                     
-                    NavigationLink(destination: NationScreen(), label: {HStack(alignment: .top){
+                    NavigationLink(destination: CurrentUserProfileView(), label: {HStack(alignment: .top){
                         Image(systemName: "person").font(.system(size: 30))
                         Text("User name").font(.system(size: 20))
                         Spacer()
                     }})//.frame(alignment: .top)
+                    .navigationTitle("tradviser")
                     .padding()
+                    
+                        // Other UI components
+                        
+                        
+
                     Spacer()
                     Text("Your Research")
                         .padding()
                     ScrollView(.horizontal){
-                        HStack(){
-                            /*Button(action:
-                             {isShowNationView = true},
-                             label:
-                             {GridRow{
-                             RoundedRectangle(cornerSize: .init(width: 20, height: 20))
-                             .frame(width: 150, height: 150)
-                             }}
-                             
-                             ).sheet(isPresented: $isShowNationView, content: {
-                             NationScreen()
-                             })*/
-                            //.padding(.horizontal, 10)
-                            NavigationLink(destination: NationScreen(), label: {ZStack {
-                                
-                                GridRow{
-                                    RoundedRectangle(cornerSize: .init(width: 20, height: 20))
-                                        .frame(width: 150, height: 150)
-                                    
-                                }.zIndex(1)
-                                Text("Country Name").zIndex(2).foregroundColor(.black)
-                            }})
+                        
+                            LazyHStack (spacing: 20){
+                                ForEach(countryViewModel.countries, id: \.self) { country in
+                                    NavigationLink(destination: NationScreen(countryName: country)) {
+                                        CountryCard(countryName: country, width: 200, height: 200)
+                                            .cornerRadius(20)
+                                            
+                                    }
+                                    .cornerRadius(20)
+                                }
+                            }
                             .padding()
-                        }
+                        
                     }
                     Text("Your Traveler")
                     ScrollView(.horizontal){
@@ -58,7 +57,7 @@ struct HomeTabScreen: View {
                                     Text("User name").font(.system(size: 20))
                                 }})
                                 .padding()
-                                NavigationLink(destination: NationScreen(), label: {HStack{
+                                NavigationLink(destination: EmptyView(), label: {HStack{
                                     Image(systemName: "person").font(.system(size: 30))
                                     Text("User name").font(.system(size: 20))
                                 }})
@@ -66,16 +65,12 @@ struct HomeTabScreen: View {
                             .padding()
                         }
                     }
-                    /*TabView(selection: $selection,
-                     content:  {
-                     NationScreen().tabItem { Label("Messege", systemImage: "message.fill") }
-                     NationScreen().tabItem { Label("Search", systemImage: "magnifyingglass") }
-                     })*/
+                    
                     //.navigationTitle("TRADVISER")
                 }
-                //.navigationTitle("Tradviser")
-            }.navigationTitle("Tradviser")
-        }
+                .navigationBarTitle("Tradviser")
+            }.navigationBarTitle("Tradviser")
+        }.navigationBarTitle("Tradviser")
     }
 }
 #Preview {

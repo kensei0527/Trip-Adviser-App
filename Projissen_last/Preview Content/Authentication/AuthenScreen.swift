@@ -12,7 +12,7 @@ struct AuthenScreen: View {
     @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if viewModel.isSignedIn {
                 HomeScreen()
             } else {

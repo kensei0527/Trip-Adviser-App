@@ -15,100 +15,74 @@ struct CountryView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                ScrollView {
-                    VStack {
-                        ForEach(viewModel.countries, id: \.self) { country in
-                            NavigationLink(destination: NationScreen()) {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.blue.opacity(0.1))
-                                        .frame(height: 150)
-                                    
-                                    Text(country)
-                                        .foregroundColor(.black)
-                                }
-                            }
-                            .padding(.horizontal)
-                            .padding(.vertical, 5)
+            ScrollView {
+                LazyVStack(spacing: 20) {
+                    ForEach(viewModel.countries, id: \.self) { country in
+                        NavigationLink(destination: NationScreen(countryName: country)) {
+                            CountryCard(countryName: country, width: .infinity, height: 200)
                         }
                     }
-                    .padding()
+                }
+                .padding()
+            }
+            .navigationTitle("Explore Countries")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingAlert = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
                 }
             }
-            .navigationTitle("Search")
-            .navigationBarItems(trailing:
-                                    Button(action: {
-                showingAlert = true
-            }) {
-                Image(systemName: "plus")
-                    .foregroundColor(.blue)
-            }
-            )
         }
-        .textFieldAlert(isPresented: $showingAlert, text: $newCountryName)
+        .alert("Add New Country", isPresented: $showingAlert) {
+            TextField("Country Name", text: $newCountryName)
+            Button("Cancel", role: .cancel) { }
+            Button("Add") {
+                if !newCountryName.isEmpty {
+                    viewModel.addCountry(name: newCountryName)
+                    newCountryName = ""
+                }
+            }
+        } message: {
+            Text("Enter the name of the country")
+        }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        CountryView()
-    }
-}
-
-// Extension to show an alert with a TextField
-struct TextFieldAlert<Presenting>: View where Presenting: View {
-    @StateObject private var viewModel = CountryViewModel()
-    @Binding var isPresented: Bool
-    @Binding var text: String
-    let presenting: Presenting
-    let title: String
-    let message: String
+struct CountryCard: View {
+    let countryName: String
+    let width: CGFloat
+    let height: CGFloat
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                presenting
-                    .blur(radius: isPresented ? 2 : 0)
-                if isPresented {
-                    VStack {
-                        Text(title).font(.headline)
-                        Text(message).font(.subheadline)
-                        TextField("", text: $text)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                        HStack {
-                            Button("Cancel") {
-                                withAnimation {
-                                    isPresented = false
-                                }
-                            }
-                            .padding()
-                            //Spacer()
-                            Button("OK") {
-                                viewModel.addCountry(name: text)
-                                withAnimation {
-                                    isPresented = false
-                                }
-                            }
-                            .padding()
-                        }
-                        .padding()
-                    }
-                    .frame(width: 300, height: 230)
-                    .background(Color.white)
-                    .cornerRadius(20)
-                    .shadow(radius: 20)
-                    .transition(.scale)
-                    .zIndex(1)
-                }
+        ZStack {
+            Image("placeholder_\(countryName.lowercased())")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: width, height: height)
+                .clipped()
+                .cornerRadius(20)
+            
+            VStack {
+                Spacer()
+                Text(countryName)
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.black.opacity(0.6))
+                    .cornerRadius(10)
             }
         }
+        .cornerRadius(20)
+        .shadow(radius: 10)
     }
 }
 
-extension View {
-    func textFieldAlert(isPresented: Binding<Bool>, text: Binding<String>) -> some View {
-        TextFieldAlert(isPresented: isPresented, text: text, presenting: self, title: "Add New Country", message: "Enter the name of the country")
+struct CountryView_Previews: PreviewProvider {
+    static var previews: some View {
+        CountryView()
     }
 }
