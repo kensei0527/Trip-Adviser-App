@@ -14,62 +14,39 @@ struct CountryView: View {
     @State private var newCountryName = ""
     
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack {
-                    ForEach(viewModel.countries, id: \.self) { country in
-                        /*VStack {
-                            Text(country)
-                                .font(.largeTitle)
-                                .padding()
+        NavigationView {
+            VStack {
+                ScrollView {
+                    VStack {
+                        ForEach(viewModel.countries, id: \.self) { country in
+                            NavigationLink(destination: NationScreen()) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.blue.opacity(0.1))
+                                        .frame(height: 150)
+                                    
+                                    Text(country)
+                                        .foregroundColor(.black)
+                                }
+                            }
+                            .padding(.horizontal)
+                            .padding(.vertical, 5)
                         }
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(10)
-                        .padding(.vertical, 5)
-                         */
-                        
-                        NavigationLink(destination: NationScreen(), label: {ZStack {
-                            
-                            GridRow{
-                                RoundedRectangle(cornerSize: .init(width: 20, height: 20))
-                                    .frame(width: 150, height: 150)
-                                
-                            }.zIndex(1)
-                            Text(country).zIndex(2).foregroundColor(.black)
-                        }})
                     }
-                }
-                .padding()
-            }
-            
-            Button(action: {
-                showingAlert = true
-                //ViewController()
-            }) {
-                Text("Add Country")
-                    .font(.title2)
                     .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-            .cornerRadius(10)
+                }
             }
-            /*.alert(isPresented: $showingAlert) {
-                Alert(
-                    title: Text("Add New Country"),
-                    message: Text("Enter the name of the country"),
-                    primaryButton: .default(Text("Add"), action: {
-                        if !newCountryName.isEmpty {
-                            viewModel.addCountry(name: newCountryName)
-                            newCountryName = ""
-                        }
-                    }),
-                    secondaryButton: .cancel()
-                )
-            }*/
-            .padding()
+            .navigationTitle("Search")
+            .navigationBarItems(trailing:
+                                    Button(action: {
+                showingAlert = true
+            }) {
+                Image(systemName: "plus")
+                    .foregroundColor(.blue)
+            }
+            )
         }
         .textFieldAlert(isPresented: $showingAlert, text: $newCountryName)
-        
     }
 }
 
@@ -81,6 +58,7 @@ struct ContentView_Previews: PreviewProvider {
 
 // Extension to show an alert with a TextField
 struct TextFieldAlert<Presenting>: View where Presenting: View {
+    @StateObject private var viewModel = CountryViewModel()
     @Binding var isPresented: Bool
     @Binding var text: String
     let presenting: Presenting
@@ -108,6 +86,7 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
                             .padding()
                             //Spacer()
                             Button("OK") {
+                                viewModel.addCountry(name: text)
                                 withAnimation {
                                     isPresented = false
                                 }
