@@ -9,8 +9,10 @@ import FirebaseFirestore
 
 class NationScreenModel: ObservableObject {
     @Published var countryName: String
+    private var userFetchModel = UserFetchModel()
     let db = Firestore.firestore()
     @Published var matchingDocumentIDs: [String] = []
+    @Published var users: [String: User] = [:]
     
     init(countryName: String) {
         self.countryName = countryName
@@ -34,5 +36,17 @@ class NationScreenModel: ObservableObject {
                     print("countryname: \(self.countryName)")
                 }
             }
+    }
+    
+    func fetchUsers() {
+        for matchUser in matchingDocumentIDs {
+            userFetchModel.fetchUserByEmail(matchUser) { [weak self] user in
+                DispatchQueue.main.async {
+                    if let user = user {
+                        self?.users[matchUser] = user
+                    }
+                }
+            }
+        }
     }
 }

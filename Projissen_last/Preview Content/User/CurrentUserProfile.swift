@@ -30,64 +30,71 @@ struct CurrentUserProfileView: View {
     
     
     var body: some View {
-        VStack {
-            if isLoading {
-                ProgressView()
-            } else {
-                profileImage?
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
-                    .shadow(radius: 7)
-                    .padding(.bottom)
-                
-                Button("Change Profile Picture") {
-                    showingImagePicker = true
-                }
-                .padding()
-                
-                Text(userName.isEmpty ? "Loading..." : userName)
-                    .font(.title)
+        ScrollView {
+            VStack(spacing: 20) {
+                if isLoading {
+                    ProgressView()
+                } else {
+                    // Profile Header
+                    ProfileHeader(profileImage: profileImage, userName: userName)
+                    
+                    // Profile Actions
+                    HStack(spacing: 20) {
+                        Button(action: { showingImagePicker = true }) {
+                            Label("Change Picture", systemImage: "camera")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        
+                        Button(action: signOut) {
+                            Label("Sign Out", systemImage: "arrow.right.square")
+                        }
+                        .buttonStyle(SecondaryButtonStyle())
+                    }
+                    
+                    // Location Information
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Your Location")
+                            .font(.headline)
+                        
+                        HStack {
+                            Image(systemName: "mappin.and.ellipse")
+                            Text(address)
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        
+                        MapView(coordinate: $userLocation)
+                            .frame(height: 200)
+                            .cornerRadius(10)
+                        
+                        TextField("Enter your City and Country", text: $address)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        
+                        Button(action: updateLocation) {
+                            Label("Update Location", systemImage: "location")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                    }
                     .padding()
-                
-                Text("Your City: \(self.address)")
-            
-                
-                Map(coordinateRegion: $region, annotationItems: [userLocation]) { location in
-                    MapMarker(coordinate: location)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
                 }
-                .frame(height: 200)
-                
-                TextField("Enter your City and Country", text: $address)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                Button("Update Location") {
-                    updateLocation()
-                }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                
-                Button(action: {signOut()}, label: {Text("Sign Out")})
-                    .padding()
             }
+            .padding()
         }
-        //.navigationTitle(userName)
-        .onAppear{
+        .background(Color.gray.opacity(0.1).ignoresSafeArea())
+        .navigationTitle("My Profile")
+        .onAppear {
             loadUserData()
             fetchUserData()
         }
         .alert(isPresented: $showingAlert) {
-            Alert(title: Text("Location Update"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text(""), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
         .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
             ImagePicker(image: $inputImage)
         }
-        .navigationTitle(userName)
     }
     
     func loadImage() {
@@ -287,3 +294,78 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
     }
 }
+
+struct ProfileHeader: View {
+    let profileImage: Image?
+    let userName: String
+    
+    var body: some View {
+        VStack {
+            if let image = profileImage {
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 120, height: 120)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                    .shadow(radius: 7)
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
+                    .foregroundColor(.gray)
+            }
+            
+            Text(userName)
+                .font(.title)
+                .fontWeight(.bold)
+        }
+    }
+}
+
+struct MapView: UIViewRepresentable {
+    @Binding var coordinate: CLLocationCoordinate2D
+    
+    func makeUIView(context: Context) -> MKMapView {
+        MKMapView(frame: .zero)
+    }
+    
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        uiView.setRegion(region, animated: true)
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        uiView.removeAnnotations(uiView.annotations)
+        uiView.addAnnotation(annotation)
+    }
+}
+
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+    }
+}
+
+struct SecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.white)
+            .foregroundColor(.blue)
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.blue, lineWidth: 1)
+            )
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+    }
+}
+

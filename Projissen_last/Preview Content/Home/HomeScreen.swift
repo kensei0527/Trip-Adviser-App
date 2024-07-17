@@ -16,6 +16,7 @@ struct HomeScreen: View {
             //ChatView(chatId: "chatId1").tabItem { Label("", systemImage: "message.fill") }
             UserListView().tabItem { Label("", systemImage: "person.3.fill") }
             CountryView().tabItem { Label("", systemImage: "magnifyingglass") }
+            TravelPlanView().tabItem{ Label("", systemImage: "square.and.pencil")}
         }
         
         
