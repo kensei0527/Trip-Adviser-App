@@ -15,6 +15,8 @@ import Firebase
 struct Trip: Identifiable {
     let id: String
     var title: String
+    var startDate: Date
+    var endDate: Date
     var activities: [Activity]
     var participants: [String]  // 参加者のユーザーIDを格納
 }
@@ -43,6 +45,8 @@ class TripViewModel: ObservableObject {
     @Published var trips: [Trip] = []
     @Published var currentTrip: Trip?
     
+    let calendar = Calendar(identifier: .gregorian)
+    
     private var db = Firestore.firestore()
     private var currentUserEmail: String? {
         return Auth.auth().currentUser?.email
@@ -64,13 +68,15 @@ class TripViewModel: ObservableObject {
                 let data = document.data()
                 let id = document.documentID
                 let title = data["title"] as? String ?? ""
+                let startDate = (data["startDate"] as? Timestamp)?.dateValue() ?? Date() //as? Date ?? self.calendar.date(from: DateComponents(year: 2000, month: 1, day: 1))
+                let endDate = (data["endDate"] as? Timestamp)?.dateValue() ?? Date() //as? Date ?? self.calendar.date(from: DateComponents(year: 2000, month: 1, day: 1))
                 let participants = data["participants"] as? [String] ?? []
-                return Trip(id: id, title: title, activities: [], participants: participants)
+                return Trip(id: id, title: title, startDate: startDate, endDate: endDate, activities: [], participants: participants)
             }
         }
     }
     
-    func addTrip(title: String) {
+    func addTrip(title: String, startDate: Date, endDate: Date) {
         guard let userId = currentUserEmail else {
             print("Error: No user logged in")
             return
@@ -78,6 +84,8 @@ class TripViewModel: ObservableObject {
         
         let newTrip = [
             "title": title,
+            "startDate": Timestamp(date: startDate),
+            "endDate": Timestamp(date: endDate),
             "participants": [userId]
         ] as [String : Any]
         
@@ -189,3 +197,5 @@ class TripViewModel: ObservableObject {
         }
     }
 }
+
+

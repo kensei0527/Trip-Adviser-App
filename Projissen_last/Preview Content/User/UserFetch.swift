@@ -62,19 +62,16 @@ class UserFetchModel: ObservableObject {
                 return
             }
             let docRef = db.collection("followers").document(user.email ?? "")
-            docRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    // ドキュメントが存在する場合
-                    if let fieldValue = document.get("followers") as? [String] {
-                        self.followers = fieldValue
-                        
-                    } else {
-                        print("指定されたフィールドは存在しません")
-                    }
+            let document = try await docRef.getDocument()
+            
+            if document.exists {
+                if let fieldValue = document.get("followers") as? [String] {
+                    self.followers = fieldValue
                 } else {
-                    print("ドキュメントが見つかりません")
+                    print("指定されたフィールドは存在しません")
                 }
-                
+            } else {
+                print("ドキュメントが見つかりません")
             }
             
             let usersRef = db.collection("users")

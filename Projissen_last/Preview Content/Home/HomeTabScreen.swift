@@ -33,7 +33,7 @@ struct HomeTabScreen: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(height: 60)
                             .clipShape(Circle())
-                        Text("Trip Buddy")
+                        Text("TraveLink")
                             .font(.title)
                             .fontWeight(.bold)
                         Spacer()
