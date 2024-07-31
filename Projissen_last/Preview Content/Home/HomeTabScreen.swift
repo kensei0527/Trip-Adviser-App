@@ -84,6 +84,7 @@ struct HomeTabScreen: View {
             userFetchModel.fetchUsers()
             //userFetchModel.fetchFollowUser()
             self.currentUserEmail = Auth.auth().currentUser?.email
+            print(currentUserEmail)
         }
         .task{
             await userFetchModel.fetchFollowUser()

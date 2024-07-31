@@ -20,9 +20,32 @@ struct ChatView: View {
     var userMail = Auth.auth().currentUser?.email
     @State private var db = Firestore.firestore()
     @State private var profileImages: [String: URL] = [:]
+    @State var youUserImage: URL? = nil
+    @State var otherParticipantEmail: String = ""
+    
+    func fetchOtherParticipant (){
+        let db = Firestore.firestore()
+        let chatRef = db.collection("chats").document(chatId)
+        
+        chatRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let participants = document.data()?["participants"] as? [String] {
+                    if let currentUserEmail = Auth.auth().currentUser?.email {
+                        //print(participants)
+                        //print(currentUserEmail)
+                        self.otherParticipantEmail = participants.first { $0 != currentUserEmail } ?? ""
+                        //print(otherParticipantEmail)
+                        getProfileImage(senderId: otherParticipantEmail)
+                    }
+                }
+            } else {
+                print("Document does not exist or error: \(error?.localizedDescription ?? "")")
+            }
+        }
+    }
     
     func getProfileImage(senderId: String) {
-        if profileImages[senderId] == nil {
+        if senderId != userMail {
             let docRef = db.collection("users").document(senderId)
             docRef.getDocument { (document, error) in
                 if let document = document, document.exists {
@@ -41,7 +64,10 @@ struct ChatView: View {
         }
     }
     
+    
+    
     var body: some View {
+        
         VStack(spacing: 0) {
             // Chat header
             chatHeader
@@ -55,6 +81,7 @@ struct ChatView: View {
                                 .id(message.id)
                                 .onAppear {
                                     getProfileImage(senderId: message.senderId)
+                                    self.youUserImage = profileImages[message.senderId]
                                 }
                         }
                     }
@@ -75,6 +102,10 @@ struct ChatView: View {
         .navigationBarHidden(true)
         .onAppear {
             chatViewModel.fetchMessages(chatId: chatId)
+            fetchOtherParticipant()
+            print(otherParticipantEmail)
+            //getProfileImage(senderId: otherParticipantEmail)
+            //self.youUserImage = profileImages[otherParticipantEmail]
         }
         .onDisappear {
             chatViewModel.stopListening()
@@ -92,7 +123,7 @@ struct ChatView: View {
                     .foregroundColor(.primary)
             }
             
-            AsyncImage(url: profileImages[chatViewModel.messages.first?.senderId ?? ""]) { image in
+            AsyncImage(url: youUserImage) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -105,13 +136,29 @@ struct ChatView: View {
                     .foregroundColor(.gray)
             }
             
-            Text(chatViewModel.messages.first?.senderId ?? "Chat")
+            /*AsyncImage(url: profileImages[]) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
+            } placeholder: {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.gray)
+            }*/
+            
+            Text(self.otherParticipantEmail)
                 .font(.system(size: 18, weight: .semibold))
             
             Spacer()
             
             Button(action: {
                 // Handle video call action
+                getProfileImage(senderId: otherParticipantEmail)
+                self.youUserImage = profileImages[otherParticipantEmail]
+
             }) {
                 Image(systemName: "video")
                     .font(.system(size: 22))
@@ -119,6 +166,16 @@ struct ChatView: View {
             }
             
         }
+        .onAppear{
+            fetchOtherParticipant()
+            
+            if(self.otherParticipantEmail != ""){
+                print(self.otherParticipantEmail)
+                getProfileImage(senderId: otherParticipantEmail)
+                self.youUserImage = profileImages[otherParticipantEmail]
+            }
+        }
+        
         .padding()
         .background(Color(.systemBackground))
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)

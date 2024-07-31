@@ -18,6 +18,8 @@ struct HomeScreen: View {
             CountryView().tabItem { Label("", systemImage: "magnifyingglass") }
             TravelPlanView().tabItem{ Label("", systemImage: "square.and.pencil")}
         }
+        .navigationViewStyle(.stack)
+        .tabViewStyle(.automatic)
         
         
         //.navigationTitle("TRADVISER")

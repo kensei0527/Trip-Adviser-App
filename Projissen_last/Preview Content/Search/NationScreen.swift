@@ -59,7 +59,10 @@ struct NationScreen: View {
                 }
             }
             .navigationTitle("Users in \(viewModel.countryName)")
+            .navigationSplitViewStyle(.automatic)
+            .navigationViewStyle(StackNavigationViewStyle())
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
             viewModel.fetchUsers()
             print(viewModel.users)

@@ -26,6 +26,8 @@ struct CountryView: View {
                 .padding()
             }
             .navigationTitle("Explore Countries")
+            .navigationSplitViewStyle(.automatic)
+            .navigationViewStyle(StackNavigationViewStyle())
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -36,6 +38,7 @@ struct CountryView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
         .alert("Add New Country", isPresented: $showingAlert) {
             TextField("Country Name", text: $newCountryName)
             Button("Cancel", role: .cancel) { }
