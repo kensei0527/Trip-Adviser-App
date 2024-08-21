@@ -17,13 +17,16 @@
 		B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116BC632C1C43730061F8EE /* ChatCreate.swift */; };
 		B123583A2C43E7DF00F087AC /* TravelPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12358392C43E7DF00F087AC /* TravelPlanView.swift */; };
 		B123583C2C440A4800F087AC /* TravelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B123583B2C440A4800F087AC /* TravelViewModel.swift */; };
-		B123583E2C45673600F087AC /* TravelPlanSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B123583D2C45673600F087AC /* TravelPlanSubView.swift */; };
+		B123583E2C45673600F087AC /* TravelActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B123583D2C45673600F087AC /* TravelActivityView.swift */; };
 		B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */; };
 		B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */; };
 		B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */; };
 		B13AF7692C2D0AAD002CAEB3 /* UserProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7682C2D0AAD002CAEB3 /* UserProfileModel.swift */; };
 		B13AF76C2C2D0F53002CAEB3 /* UserMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */; };
 		B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF76D2C343D60002CAEB3 /* NationScreenModel.swift */; };
+		B13BBAB62C70FFD600EAB85C /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */; };
+		B13BBAB82C71B25D00EAB85C /* PlanEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13BBAB72C71B25D00EAB85C /* PlanEditView.swift */; };
+		B13BBABB2C72F17100EAB85C /* MyAppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */; };
 		B15660242C10AAC100EC1A4A /* Projissen_lastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */; };
 		B15660282C10AAC800EC1A4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B15660272C10AAC800EC1A4A /* Assets.xcassets */; };
 		B156602B2C10AAC800EC1A4A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */; };
@@ -74,13 +77,17 @@
 		B116BC632C1C43730061F8EE /* ChatCreate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCreate.swift; sourceTree = "<group>"; };
 		B12358392C43E7DF00F087AC /* TravelPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelPlanView.swift; sourceTree = "<group>"; };
 		B123583B2C440A4800F087AC /* TravelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewModel.swift; sourceTree = "<group>"; };
-		B123583D2C45673600F087AC /* TravelPlanSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelPlanSubView.swift; sourceTree = "<group>"; };
+		B123583D2C45673600F087AC /* TravelActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelActivityView.swift; sourceTree = "<group>"; };
 		B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowRquestModel.swift; sourceTree = "<group>"; };
 		B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserProfile.swift; sourceTree = "<group>"; };
 		B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile2.swift; sourceTree = "<group>"; };
 		B13AF7682C2D0AAD002CAEB3 /* UserProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileModel.swift; sourceTree = "<group>"; };
 		B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMapView.swift; sourceTree = "<group>"; };
 		B13AF76D2C343D60002CAEB3 /* NationScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationScreenModel.swift; sourceTree = "<group>"; };
+		B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
+		B13BBAB72C71B25D00EAB85C /* PlanEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanEditView.swift; sourceTree = "<group>"; };
+		B13BBAB92C72EF3800EAB85C /* Projissen_lastDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Projissen_lastDebug.entitlements; sourceTree = "<group>"; };
+		B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAppCheckProviderFactory.swift; sourceTree = "<group>"; };
 		B15660202C10AAC100EC1A4A /* Projissen_last.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Projissen_last.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projissen_lastApp.swift; sourceTree = "<group>"; };
 		B15660272C10AAC800EC1A4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -190,7 +197,8 @@
 			children = (
 				B12358392C43E7DF00F087AC /* TravelPlanView.swift */,
 				B123583B2C440A4800F087AC /* TravelViewModel.swift */,
-				B123583D2C45673600F087AC /* TravelPlanSubView.swift */,
+				B123583D2C45673600F087AC /* TravelActivityView.swift */,
+				B13BBAB72C71B25D00EAB85C /* PlanEditView.swift */,
 			);
 			path = TravelPlan;
 			sourceTree = "<group>";
@@ -222,10 +230,13 @@
 		B15660222C10AAC100EC1A4A /* Projissen_last */ = {
 			isa = PBXGroup;
 			children = (
+				B13BBAB92C72EF3800EAB85C /* Projissen_lastDebug.entitlements */,
 				B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */,
+				B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */,
 				B15660272C10AAC800EC1A4A /* Assets.xcassets */,
 				B15660702C160A9000EC1A4A /* GoogleService-Info.plist */,
 				B15660292C10AAC800EC1A4A /* Preview Content */,
+				B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */,
 			);
 			path = Projissen_last;
 			sourceTree = "<group>";
@@ -310,7 +321,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B156601B2C10AAC100EC1A4A /* Build configuration list for PBXProject "Projissen_last" */;
+			buildConfigurationList = B156601B2C10AAC100EC1A4A /* Build configuration list for PBXProject "TraveLink" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -338,6 +349,7 @@
 			files = (
 				B156602B2C10AAC800EC1A4A /* Preview Assets.xcassets in Resources */,
 				B15660282C10AAC800EC1A4A /* Assets.xcassets in Resources */,
+				B13BBAB62C70FFD600EAB85C /* ColorAsset.xcassets in Resources */,
 				B15660712C160A9000EC1A4A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,17 +365,19 @@
 				B11642332C19383B00190599 /* SearchCountryList.swift in Sources */,
 				B15660362C15FF8A00EC1A4A /* HomeTabScreen.swift in Sources */,
 				B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */,
+				B13BBABB2C72F17100EAB85C /* MyAppCheckProviderFactory.swift in Sources */,
 				B13AF7692C2D0AAD002CAEB3 /* UserProfileModel.swift in Sources */,
 				B116422C2C188ADA00190599 /* ChatViewModel.swift in Sources */,
 				B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */,
 				B13AF76C2C2D0F53002CAEB3 /* UserMapView.swift in Sources */,
 				B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */,
+				B13BBAB82C71B25D00EAB85C /* PlanEditView.swift in Sources */,
 				B116422E2C188B2D00190599 /* ChatView.swift in Sources */,
 				B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */,
 				B11642312C19336000190599 /* CountryView.swift in Sources */,
 				B123583A2C43E7DF00F087AC /* TravelPlanView.swift in Sources */,
 				B15660242C10AAC100EC1A4A /* Projissen_lastApp.swift in Sources */,
-				B123583E2C45673600F087AC /* TravelPlanSubView.swift in Sources */,
+				B123583E2C45673600F087AC /* TravelActivityView.swift in Sources */,
 				B15660342C1156A000EC1A4A /* NationScreen.swift in Sources */,
 				B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */,
 				B15660322C10B07E00EC1A4A /* HomeScreen.swift in Sources */,
@@ -502,6 +516,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Projissen_last/Projissen_lastDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Projissen_last/Preview Content\"";
@@ -513,6 +528,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -542,6 +558,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -558,7 +575,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B156601B2C10AAC100EC1A4A /* Build configuration list for PBXProject "Projissen_last" */ = {
+		B156601B2C10AAC100EC1A4A /* Build configuration list for PBXProject "TraveLink" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B156602C2C10AAC800EC1A4A /* Debug */,

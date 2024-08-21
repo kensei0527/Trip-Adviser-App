@@ -18,7 +18,7 @@
                BlueprintIdentifier = "B156601F2C10AAC100EC1A4A"
                BuildableName = "Projissen_last.app"
                BlueprintName = "Projissen_last"
-               ReferencedContainer = "container:Projissen_last.xcodeproj">
+               ReferencedContainer = "container:TraveLink.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +47,15 @@
             BlueprintIdentifier = "B156601F2C10AAC100EC1A4A"
             BuildableName = "Projissen_last.app"
             BlueprintName = "Projissen_last"
-            ReferencedContainer = "container:Projissen_last.xcodeproj">
+            ReferencedContainer = "container:TraveLink.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-FIRDebugEnabled"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -64,7 +70,7 @@
             BlueprintIdentifier = "B156601F2C10AAC100EC1A4A"
             BuildableName = "Projissen_last.app"
             BlueprintName = "Projissen_last"
-            ReferencedContainer = "container:Projissen_last.xcodeproj">
+            ReferencedContainer = "container:TraveLink.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
