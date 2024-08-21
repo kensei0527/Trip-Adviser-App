@@ -25,6 +25,7 @@ struct ChatView: View {
     
     func fetchOtherParticipant (){
         let db = Firestore.firestore()
+        print(self.chatId)
         let chatRef = db.collection("chats").document(chatId)
         
         chatRef.getDocument { (document, error) in
@@ -154,7 +155,7 @@ struct ChatView: View {
             
             Spacer()
             
-            /*Button(action: {
+            Button(action: {
                 // Handle video call action
                 getProfileImage(senderId: otherParticipantEmail)
                 self.youUserImage = profileImages[otherParticipantEmail]
@@ -163,7 +164,7 @@ struct ChatView: View {
                 Image(systemName: "video")
                     .font(.system(size: 22))
                     .foregroundColor(.primary)
-            }*/
+            }
             
         }
         .onAppear{
@@ -196,11 +197,11 @@ struct ChatView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(20)
             
-            /*Button(action: sendMessage) {
-                Image(systemName: messageText.isEmpty ? "mic" : "paperplane.fill")
+            Button(action: sendMessage) {
+                Image(systemName:  "paperplane.fill")
                     .font(.system(size: 24))
                     .foregroundColor(.blue)
-            }*/
+            }
         }
         .padding()
         .background(Color(.systemBackground))

@@ -56,14 +56,14 @@ struct UserMapView: View {
                     annotationItems: [region.center]) { item in
                     MapMarker(coordinate: item, tint: .red)
                 }
-                .mapStyle(.imagery)
+                //.mapStyle(.imagery)
             case .hybrid:
                 Map(coordinateRegion: .constant(region),
                     interactionModes: [.zoom, .pan],
                     annotationItems: [region.center]) { item in
                     MapMarker(coordinate: item, tint: .red)
                 }
-                .mapStyle(.hybrid)
+                //.mapStyle(.hybrid)
             }
         } else {
             ProgressView()

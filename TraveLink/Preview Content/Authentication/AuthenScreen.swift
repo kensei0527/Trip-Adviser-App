@@ -17,7 +17,7 @@ struct AuthenScreen: View {
         NavigationStack {
             if viewModel.isSignedIn {
                 HomeScreen()
-            } else {
+            }else {
                 SignInView()
             }
         }
@@ -76,9 +76,18 @@ struct SignInView: View {
             }
             .padding(.horizontal)
             
-            Button(action: {
+            /*Button(action: {
                 viewModel.signUp(email: email, password: password, userName: userName)
             }) {
+                Text("Sign Up")
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }*/
+            
+            NavigationLink(destination: SignUpView()){
                 Text("Sign Up")
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding()

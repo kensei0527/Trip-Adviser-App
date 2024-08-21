@@ -32,10 +32,13 @@ class UserProfileViewModel: ObservableObject {
             chatCreationViewModel.createChat(with: user.email) { newChatId in
                 if let newChatId = newChatId {
                     self.chatId = newChatId
+                    print(self.chatId)
+                    print("followCHeckok")
                 }
             }
         } else {
             showingChatAlert = true
+            print("followCHeck NO")
         }
     }
     

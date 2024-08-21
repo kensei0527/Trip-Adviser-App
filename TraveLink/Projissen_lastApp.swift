@@ -23,7 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 @main
-struct Projissen_lastApp: App {
+struct TraveLink: App {
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @State var authHandle: AuthStateDidChangeListenerHandle?
