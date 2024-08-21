@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,7 +27,7 @@
 		B13BBAB62C70FFD600EAB85C /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */; };
 		B13BBAB82C71B25D00EAB85C /* PlanEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13BBAB72C71B25D00EAB85C /* PlanEditView.swift */; };
 		B13BBABB2C72F17100EAB85C /* MyAppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */; };
-		B15660242C10AAC100EC1A4A /* Projissen_lastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */; };
+		B15660242C10AAC100EC1A4A /* TraveLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660232C10AAC100EC1A4A /* TraveLink.swift */; };
 		B15660282C10AAC800EC1A4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B15660272C10AAC800EC1A4A /* Assets.xcassets */; };
 		B156602B2C10AAC800EC1A4A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */; };
 		B15660322C10B07E00EC1A4A /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660312C10B07E00EC1A4A /* HomeScreen.swift */; };
@@ -64,6 +64,7 @@
 		B15660712C160A9000EC1A4A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B15660702C160A9000EC1A4A /* GoogleService-Info.plist */; };
 		B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660782C17EE8500EC1A4A /* AuthenScreen.swift */; };
 		B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */; };
+		B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B171DD572C76194800CAF1B2 /* SignupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,7 +90,7 @@
 		B13BBAB92C72EF3800EAB85C /* Projissen_lastDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Projissen_lastDebug.entitlements; sourceTree = "<group>"; };
 		B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAppCheckProviderFactory.swift; sourceTree = "<group>"; };
 		B15660202C10AAC100EC1A4A /* Projissen_last.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Projissen_last.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projissen_lastApp.swift; sourceTree = "<group>"; };
+		B15660232C10AAC100EC1A4A /* TraveLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraveLink.swift; sourceTree = "<group>"; };
 		B15660272C10AAC800EC1A4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B15660312C10B07E00EC1A4A /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -98,6 +99,7 @@
 		B15660702C160A9000EC1A4A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B15660782C17EE8500EC1A4A /* AuthenScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenScreen.swift; sourceTree = "<group>"; };
 		B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		B171DD572C76194800CAF1B2 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 			children = (
 				B15660782C17EE8500EC1A4A /* AuthenScreen.swift */,
 				B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */,
+				B171DD572C76194800CAF1B2 /* SignupView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -231,7 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				B13BBAB92C72EF3800EAB85C /* Projissen_lastDebug.entitlements */,
-				B15660232C10AAC100EC1A4A /* Projissen_lastApp.swift */,
+				B15660232C10AAC100EC1A4A /* TraveLink.swift */,
 				B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */,
 				B15660272C10AAC800EC1A4A /* Assets.xcassets */,
 				B15660702C160A9000EC1A4A /* GoogleService-Info.plist */,
@@ -322,7 +325,7 @@
 				};
 			};
 			buildConfigurationList = B156601B2C10AAC100EC1A4A /* Build configuration list for PBXProject "TraveLink" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -376,7 +379,7 @@
 				B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */,
 				B11642312C19336000190599 /* CountryView.swift in Sources */,
 				B123583A2C43E7DF00F087AC /* TravelPlanView.swift in Sources */,
-				B15660242C10AAC100EC1A4A /* Projissen_lastApp.swift in Sources */,
+				B15660242C10AAC100EC1A4A /* TraveLink.swift in Sources */,
 				B123583E2C45673600F087AC /* TravelActivityView.swift in Sources */,
 				B15660342C1156A000EC1A4A /* NationScreen.swift in Sources */,
 				B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */,
@@ -385,6 +388,7 @@
 				B11642372C1C357700190599 /* UserFetch.swift in Sources */,
 				B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */,
 				B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */,
+				B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */,
 				B116423A2C1C35E600190599 /* UserProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,13 +532,13 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Kensei.Projissen-last";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Kensei.TraveLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -558,13 +562,13 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Kensei.Projissen-last";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Kensei.TraveLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
