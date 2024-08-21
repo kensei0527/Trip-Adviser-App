@@ -29,6 +29,7 @@ struct UserProfileVieww: View {
                 VStack(spacing: 20) {
                     profileHeader
                     userInfo
+                    introductionSection
                     actionButtons
                 }
                 .padding()
@@ -37,6 +38,7 @@ struct UserProfileVieww: View {
             .background(Color(.systemBackground))
             .onAppear {
                 viewModel.checkFollowStatus()
+                viewModel.fetchUserIntroduction()
             }
             .sheet(isPresented: $showingMap) {
                 UserMapView(coordinate: coordinate)
@@ -108,6 +110,21 @@ struct UserProfileVieww: View {
                         .foregroundColor(.primary)
                 }
             }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+    
+    private var introductionSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Introduction")
+                .font(.headline)
+                .padding(.bottom, 4)
+            
+            Text(viewModel.userIntroduction.isEmpty ? "No introduction available." : viewModel.userIntroduction)
+                .font(.body)
+                .foregroundColor(.secondary)
         }
         .padding()
         .background(Color(.systemGray6))

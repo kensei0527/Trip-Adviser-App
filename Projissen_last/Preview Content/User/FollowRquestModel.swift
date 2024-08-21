@@ -29,6 +29,9 @@ class FollowRequestViewModel: ObservableObject {
                     return
                 }
                 
+                if(currentUserEmail == targetUserEmail){
+                    return
+                }
                 // If no existing request, add a new one
         
                 let newRequest = FollowRequest(id: UUID().uuidString, fromEmail: currentUserEmail, toEmail: targetUserEmail) //FollowRequest型のものを作成

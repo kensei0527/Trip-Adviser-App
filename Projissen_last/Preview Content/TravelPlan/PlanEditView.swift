@@ -46,11 +46,30 @@ struct TripDetailView: View {
                     Image(systemName: "plus")
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: { sharedState.toggleEditMode() }) {
-                    Image(systemName: sharedState.isEditMode ? "pencil.slash" : "pencil")
-                }
+        }
+        .toolbar{
+            NavigationLink(destination: AddTripEditerView(trip: trip, userlist: userList){ newEditors in
+                //print(trip.title)
+                viewModel.addEditors(to: trip, editors: newEditors)
+                
+            },
+            isActive: $sharedState.isAddEditorViewPresented
+            ){
+                Image(systemName: "person.3.sequence")
             }
+            .environmentObject(sharedState)
+            
+            .onDisappear{
+                viewModel.fetchActivities(for: trip)
+            }
+        }
+        .onChange(of: sharedState.isAddEditorViewPresented) { isPresented in
+            if !isPresented {
+                viewModel.fetchActivities(for: trip)
+            }
+        }
+        .onAppear {
+            viewModel.fetchActivities(for: trip)
         }
         .sheet(isPresented: $showingAddActivity) {
             AddActivityView(viewModel: viewModel, trip: trip, isPresented: $showingAddActivity)
@@ -63,6 +82,7 @@ struct TripDetailView: View {
         }
         .environmentObject(sharedState)
     }
+
     
     private var groupedActivities: [(Date, [Activity])] {
         let grouped = Dictionary(grouping: trip.activities) { activity in
@@ -183,12 +203,19 @@ struct TimelineItemView: View {
 struct AddTripEditerView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var userFetchModel = UserFetchModel()
+    @State private var selectedUsers: Set<String> = []
     @EnvironmentObject var sharedState: SharedTripEditorState
     var trip: Trip
     var userlist: [User]
     var onComplete: ([String]) -> Void
+
+    
+    
     
     var body: some View {
+        
+        
+        
         List(userlist) { user in
             HStack {
                 AsyncImage(url: user.profileImageURL) { image in
@@ -204,43 +231,55 @@ struct AddTripEditerView: View {
                         .font(.headline)
                     Text(user.email)
                         .font(.subheadline)
+                    //.foreground(Color.gray)
                 }
                 
                 Spacer()
                 
-                if sharedState.selectedUsers.contains(user.id) {
+                if selectedUsers.contains(user.id) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.blue)
                 }
             }
+            
             .onTapGesture {
-                sharedState.toggleUserSelection(user.id)
+                if selectedUsers.contains(user.id) {
+                    selectedUsers.remove(user.id)
+                } else {
+                    selectedUsers.insert(user.id)
+                }
             }
         }
-        .task {
+        
+        //.onAppear(perform: userFetchModel.fetchFollowUser)
+        .task{
+            //print("onappear")
             await userFetchModel.fetchFollowUser()
+            //print(userFetchModel.useredFollowers)
         }
         .navigationTitle("Add New Editor: \(trip.title)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Done") {
-                    let newEditors = Array(sharedState.selectedUsers)
+                    let newEditors = Array(selectedUsers)
                     onComplete(newEditors)
-                    sharedState.clearSelections()
+                    sharedState.isAddEditorViewPresented = false
                     dismiss()
                 }
+                
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing){
                 Button(action: {
                     Task {
                         await userFetchModel.fetchFollowUser()
-                    }
-                }, label: {
+                    }},
+                       label: {
                     Image(systemName: "arrow.clockwise")
                 })
             }
         }
     }
+    
 }

@@ -28,7 +28,7 @@ struct CountryView: View {
             .navigationTitle("Explore Countries")
             .navigationSplitViewStyle(.automatic)
             .navigationViewStyle(StackNavigationViewStyle())
-            .toolbar {
+            /*.toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         showingAlert = true
@@ -36,7 +36,7 @@ struct CountryView: View {
                         Image(systemName: "plus")
                     }
                 }
-            }
+            }*/
         }
         .navigationViewStyle(.stack)
         .alert("Add New Country", isPresented: $showingAlert) {

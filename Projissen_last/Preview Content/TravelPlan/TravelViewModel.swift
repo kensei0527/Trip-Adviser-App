@@ -34,12 +34,19 @@ struct Activity: Identifiable, Equatable {
 }
 
 enum ActivityType: String, CaseIterable {
-    case travel = "移動"
-    case sightseeing = "観光"
-    case hotel = "ホテル滞在"
+    case travel = "Move"
+    case sightseeing = "Sightsee"
+    case hotel = "Hotel"
+    case breakfast = "Breakfast"
+    case lunch = "Lunch"
+    case dinner = "Dinner"
 }
 
 // MARK: - View Model
+
+class SharedTripEditorState: ObservableObject {
+    @Published var isAddEditorViewPresented: Bool = false
+}
 
 class TripViewModel: ObservableObject {
     @Published var trips: [Trip] = []

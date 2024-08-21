@@ -16,6 +16,8 @@ struct CurrentUserProfileView: View {
     @State private var userLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503)  // デフォルトは東京
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503), span: MKCoordinateSpan(latitudeDelta: 2, longitudeDelta: 2))
     @State private var showingLocationPicker = false
+    @State private var countryAddress: String = ""
+    @State private var cityAddress: String = ""
     @State private var address: String = ""
     @State private var showingAlert = false
     @State private var alertMessage = ""
@@ -24,6 +26,9 @@ struct CurrentUserProfileView: View {
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage?
     @State private var profileImage: Image?
+    @State private var introduction: String = ""
+    @State private var isEditingIntroduction: Bool = false
+    @Environment(\.dismiss) var dismiss
     
     private var db = Firestore.firestore()
     private let storage = Storage.storage().reference()
@@ -51,6 +56,38 @@ struct CurrentUserProfileView: View {
                         .buttonStyle(SecondaryButtonStyle())
                     }
                     
+                    // Introduction Section
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text("Introduction")
+                                .font(.headline)
+                            Spacer()
+                            Button(action: {
+                                isEditingIntroduction.toggle()
+                                if !isEditingIntroduction {
+                                    saveIntroduction()
+                                }
+                            }) {
+                                Text(isEditingIntroduction ? "Save" : "Edit")
+                            }
+                        }
+                        
+                        if isEditingIntroduction {
+                            TextEditor(text: $introduction)
+                                .frame(height: 100)
+                                .padding(4)
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(8)
+                        } else {
+                            Text(introduction.isEmpty ? "No introduction yet." : introduction)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    
                     // Location Information
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Your Location")
@@ -67,7 +104,10 @@ struct CurrentUserProfileView: View {
                             .frame(height: 200)
                             .cornerRadius(10)
                         
-                        TextField("Enter your City and Country", text: $address)
+                        TextField("Enter your Country", text: $countryAddress)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        
+                        TextField("Enter your City", text: $cityAddress)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         
                         Button(action: updateLocation) {
@@ -169,9 +209,26 @@ struct CurrentUserProfileView: View {
                 if let profileImageURL = document.data()["profileImageURL"] as? String {
                     self.loadProfileImage(from: profileImageURL)
                 }
+                if let intro = document.data()["introduction"] as? String {
+                    self.introduction = intro
+                }
                 
                 isLoading = false
             }
+    }
+    
+    func saveIntroduction() {
+        guard let userEmail = Auth.auth().currentUser?.email else { return }
+        
+        db.collection("users").document(userEmail).setData(["introduction": introduction], merge: true) { error in
+            if let error = error {
+                self.alertMessage = "Error saving introduction: \(error.localizedDescription)"
+                self.showingAlert = true
+            } else {
+                self.alertMessage = "Introduction saved successfully!"
+                self.showingAlert = true
+            }
+        }
     }
     
     func loadProfileImage(from urlString: String) {
@@ -211,6 +268,7 @@ struct CurrentUserProfileView: View {
     }
     
     func updateLocation() {
+        address = countryAddress + " " + cityAddress
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address) { placemarks, error in
             if let error = error {
@@ -255,6 +313,7 @@ struct CurrentUserProfileView: View {
     func signOut() {
         do {
             try Auth.auth().signOut()
+            dismiss()
             //self.isSignedIn = false
         } catch let signOutError as NSError {
             print("Error signing out: \(signOutError.localizedDescription)")

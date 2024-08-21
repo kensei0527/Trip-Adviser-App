@@ -154,7 +154,7 @@ struct ChatView: View {
             
             Spacer()
             
-            Button(action: {
+            /*Button(action: {
                 // Handle video call action
                 getProfileImage(senderId: otherParticipantEmail)
                 self.youUserImage = profileImages[otherParticipantEmail]
@@ -163,7 +163,7 @@ struct ChatView: View {
                 Image(systemName: "video")
                     .font(.system(size: 22))
                     .foregroundColor(.primary)
-            }
+            }*/
             
         }
         .onAppear{
@@ -183,24 +183,24 @@ struct ChatView: View {
     
     private var messageInputBar: some View {
         HStack(spacing: 12) {
-            Button(action: {
+            /*Button(action: {
                 // Handle camera action
             }) {
                 Image(systemName: "camera")
                     .font(.system(size: 24))
                     .foregroundColor(.primary)
-            }
+            }*/
             
             TextField("Message...", text: $messageText)
                 .padding(10)
                 .background(Color(.systemGray6))
                 .cornerRadius(20)
             
-            Button(action: sendMessage) {
+            /*Button(action: sendMessage) {
                 Image(systemName: messageText.isEmpty ? "mic" : "paperplane.fill")
                     .font(.system(size: 24))
                     .foregroundColor(.blue)
-            }
+            }*/
         }
         .padding()
         .background(Color(.systemBackground))
@@ -226,7 +226,7 @@ struct MessageBubble: View {
     let profileImageURL: URL?
     
     var body: some View {
-        HStack(alignment: .bottom, spacing: 8) {
+        HStack(alignment: .bottom) {
             if !isCurrentUser {
                 AsyncImage(url: profileImageURL) { image in
                     image

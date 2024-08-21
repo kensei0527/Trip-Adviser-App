@@ -196,7 +196,7 @@ struct HomeTabScreen: View {
             }
             .frame(width: 100)
             .padding()
-            .background(Color.white)
+            .background(Color("List"))
             .cornerRadius(10)
             .shadow(radius: 2)
         }

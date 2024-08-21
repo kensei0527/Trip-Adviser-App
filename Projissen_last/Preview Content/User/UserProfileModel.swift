@@ -17,6 +17,7 @@ class UserProfileViewModel: ObservableObject {
     @Published var showingFollowRequestAlert = false
     @Published var chatId: String?
     @Published var userCoordinate: CLLocationCoordinate2D?
+    @Published var userIntroduction: String = ""
     
     private var db = Firestore.firestore()
     private var chatCreationViewModel = ChatCreationViewModel()
@@ -81,6 +82,20 @@ class UserProfileViewModel: ObservableObject {
                 }
         }
     }
+    
+    func fetchUserIntroduction() {
+        db.collection("users").document(user.email).getDocument { [weak self] (document, error) in
+            if let error = error {
+                print("Error fetching user introduction: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = document, document.exists {
+                self?.userIntroduction = document.data()?["introduction"] as? String ?? ""
+            }
+        }
+    }
+    
     func fetchUserLocation() {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(user.location) { [weak self] placemarks, error in

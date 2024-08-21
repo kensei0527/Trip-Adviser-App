@@ -177,7 +177,7 @@ struct UserCard: View {
                 .foregroundColor(.gray)
         }
         .padding()
-        .background(Color.white)
+        .background(Color("List"))
         .cornerRadius(10)
         .shadow(color: .gray.opacity(0.2), radius: 2)
     }

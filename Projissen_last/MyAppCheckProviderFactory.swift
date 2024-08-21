@@ -5,4 +5,12 @@
 //  Created by 古家健成 on 2024/08/19.
 //
 
-import Foundation
+import Firebase
+
+class YourAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
+    func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
+        return AppAttestProvider(app: app)
+    }
+}
+
+

@@ -8,12 +8,15 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseAuth
+import Firebase
 
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        let providerFactory = YourAppCheckProviderFactory()
+        AppCheck.setAppCheckProviderFactory(providerFactory)
         FirebaseApp.configure()
         return true
     }
@@ -25,6 +28,7 @@ struct Projissen_lastApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @State var authHandle: AuthStateDidChangeListenerHandle?
     @StateObject private var viewModel = AuthViewModel()
+    @StateObject private var sharedState = SharedTripEditorState()
     
 
     //FirebaseApp.configure()
@@ -41,7 +45,9 @@ struct Projissen_lastApp: App {
                 }
             })*/
             //HomeScreen()
-            AuthenScreen().environmentObject(viewModel)
+            AuthenScreen()
+                .environmentObject(viewModel)
+                .environmentObject(sharedState) //旅程管理のところで使う環境変数PlanEditViewで使用
             
         }
     }
