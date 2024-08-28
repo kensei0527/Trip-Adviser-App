@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1079DBC2C76F17F007B1F2C /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1079DBB2C76F17F007B1F2C /* SettingView.swift */; };
 		B116422C2C188ADA00190599 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116422B2C188ADA00190599 /* ChatViewModel.swift */; };
 		B116422E2C188B2D00190599 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116422D2C188B2D00190599 /* ChatView.swift */; };
 		B11642312C19336000190599 /* CountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642302C19336000190599 /* CountryView.swift */; };
@@ -68,6 +69,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B1079DBB2C76F17F007B1F2C /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		B116422B2C188ADA00190599 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		B116422D2C188B2D00190599 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		B11642302C19336000190599 /* CountryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryView.swift; sourceTree = "<group>"; };
@@ -87,9 +89,9 @@
 		B13AF76D2C343D60002CAEB3 /* NationScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationScreenModel.swift; sourceTree = "<group>"; };
 		B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		B13BBAB72C71B25D00EAB85C /* PlanEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanEditView.swift; sourceTree = "<group>"; };
-		B13BBAB92C72EF3800EAB85C /* Projissen_lastDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Projissen_lastDebug.entitlements; sourceTree = "<group>"; };
+		B13BBAB92C72EF3800EAB85C /* TraveLinkDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TraveLinkDebug.entitlements; sourceTree = "<group>"; };
 		B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAppCheckProviderFactory.swift; sourceTree = "<group>"; };
-		B15660202C10AAC100EC1A4A /* Projissen_last.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Projissen_last.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B15660202C10AAC100EC1A4A /* TraveLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TraveLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B15660232C10AAC100EC1A4A /* TraveLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraveLink.swift; sourceTree = "<group>"; };
 		B15660272C10AAC800EC1A4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */,
 				B13AF7682C2D0AAD002CAEB3 /* UserProfileModel.swift */,
 				B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */,
+				B1079DBB2C76F17F007B1F2C /* SettingView.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -217,7 +220,7 @@
 		B15660172C10AAC100EC1A4A = {
 			isa = PBXGroup;
 			children = (
-				B15660222C10AAC100EC1A4A /* Projissen_last */,
+				B15660222C10AAC100EC1A4A /* TraveLink */,
 				B15660212C10AAC100EC1A4A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -225,15 +228,15 @@
 		B15660212C10AAC100EC1A4A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B15660202C10AAC100EC1A4A /* Projissen_last.app */,
+				B15660202C10AAC100EC1A4A /* TraveLink.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B15660222C10AAC100EC1A4A /* Projissen_last */ = {
+		B15660222C10AAC100EC1A4A /* TraveLink */ = {
 			isa = PBXGroup;
 			children = (
-				B13BBAB92C72EF3800EAB85C /* Projissen_lastDebug.entitlements */,
+				B13BBAB92C72EF3800EAB85C /* TraveLinkDebug.entitlements */,
 				B15660232C10AAC100EC1A4A /* TraveLink.swift */,
 				B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */,
 				B15660272C10AAC800EC1A4A /* Assets.xcassets */,
@@ -241,7 +244,7 @@
 				B15660292C10AAC800EC1A4A /* Preview Content */,
 				B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */,
 			);
-			path = Projissen_last;
+			path = TraveLink;
 			sourceTree = "<group>";
 		};
 		B15660292C10AAC800EC1A4A /* Preview Content */ = {
@@ -262,9 +265,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B156601F2C10AAC100EC1A4A /* Projissen_last */ = {
+		B156601F2C10AAC100EC1A4A /* TraveLink */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B156602E2C10AAC800EC1A4A /* Build configuration list for PBXNativeTarget "Projissen_last" */;
+			buildConfigurationList = B156602E2C10AAC800EC1A4A /* Build configuration list for PBXNativeTarget "TraveLink" */;
 			buildPhases = (
 				B156601C2C10AAC100EC1A4A /* Sources */,
 				B156601D2C10AAC100EC1A4A /* Frameworks */,
@@ -274,7 +277,7 @@
 			);
 			dependencies = (
 			);
-			name = Projissen_last;
+			name = TraveLink;
 			packageProductDependencies = (
 				B15660382C1608DE00EC1A4A /* FirebaseAnalytics */,
 				B156603A2C1608DE00EC1A4A /* FirebaseAnalyticsOnDeviceConversion */,
@@ -306,7 +309,7 @@
 				B156606E2C1608DE00EC1A4A /* FirebaseVertexAI-Preview */,
 			);
 			productName = Projissen_last;
-			productReference = B15660202C10AAC100EC1A4A /* Projissen_last.app */;
+			productReference = B15660202C10AAC100EC1A4A /* TraveLink.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -340,7 +343,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B156601F2C10AAC100EC1A4A /* Projissen_last */,
+				B156601F2C10AAC100EC1A4A /* TraveLink */,
 			);
 		};
 /* End PBXProject section */
@@ -385,6 +388,7 @@
 				B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */,
 				B15660322C10B07E00EC1A4A /* HomeScreen.swift in Sources */,
 				B11642352C1BDBB200190599 /* UserListView.swift in Sources */,
+				B1079DBC2C76F17F007B1F2C /* SettingView.swift in Sources */,
 				B11642372C1C357700190599 /* UserFetch.swift in Sources */,
 				B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */,
 				B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */,
@@ -430,7 +434,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -520,13 +524,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Projissen_last/Projissen_lastDebug.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TraveLink/TraveLinkDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Projissen_last/Preview Content\"";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_ASSET_PATHS = "\"TraveLink/Preview Content\"";
 				DEVELOPMENT_TEAM = DBQLS32MZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_CFBundleDisplayName[sdk=*]" = TraveLink;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -553,10 +560,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Projissen_last/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TraveLink/Preview Content\"";
 				DEVELOPMENT_TEAM = DBQLS32MZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_CFBundleDisplayName[sdk=*]" = TraveLink;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -588,7 +597,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B156602E2C10AAC800EC1A4A /* Build configuration list for PBXNativeTarget "Projissen_last" */ = {
+		B156602E2C10AAC800EC1A4A /* Build configuration list for PBXNativeTarget "TraveLink" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B156602F2C10AAC800EC1A4A /* Debug */,
