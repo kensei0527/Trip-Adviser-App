@@ -25,6 +25,7 @@ class ChatViewModel: ObservableObject {
         let newMessage = ChatMessage(senderId: senderId, text: text, timestamp: Timestamp())
         do {
             _ = try db.collection("chats").document(chatId).collection("messages").addDocument(from: newMessage)
+            
         } catch let error {
             print("Error sending message: \(error.localizedDescription)")
         }
@@ -47,4 +48,6 @@ class ChatViewModel: ObservableObject {
     func stopListening() {
         listener?.remove()
     }
+    
+    
 }

@@ -150,6 +150,11 @@ struct UserCard: View {
                 switch phase {
                 case .empty:
                     ProgressView()
+                    /*Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.gray)*/
                 case .success(let image):
                     image
                         .resizable()

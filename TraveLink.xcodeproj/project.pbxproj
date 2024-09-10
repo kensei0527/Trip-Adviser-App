@@ -14,7 +14,6 @@
 		B11642332C19383B00190599 /* SearchCountryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642322C19383B00190599 /* SearchCountryList.swift */; };
 		B11642352C1BDBB200190599 /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642342C1BDBB100190599 /* UserListView.swift */; };
 		B11642372C1C357700190599 /* UserFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642362C1C357700190599 /* UserFetch.swift */; };
-		B116423A2C1C35E600190599 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11642392C1C35E600190599 /* UserProfile.swift */; };
 		B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B116BC632C1C43730061F8EE /* ChatCreate.swift */; };
 		B123583A2C43E7DF00F087AC /* TravelPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12358392C43E7DF00F087AC /* TravelPlanView.swift */; };
 		B123583C2C440A4800F087AC /* TravelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B123583B2C440A4800F087AC /* TravelViewModel.swift */; };
@@ -66,6 +65,8 @@
 		B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660782C17EE8500EC1A4A /* AuthenScreen.swift */; };
 		B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */; };
 		B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B171DD572C76194800CAF1B2 /* SignupView.swift */; };
+		B1D4B3462C82E75800D278D9 /* NotificationManeger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D4B3452C82E75800D278D9 /* NotificationManeger.swift */; };
+		B1FE2BAC2C876218007CC2A4 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1FE2BAB2C876218007CC2A4 /* SafariServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,7 +77,6 @@
 		B11642322C19383B00190599 /* SearchCountryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCountryList.swift; sourceTree = "<group>"; };
 		B11642342C1BDBB100190599 /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		B11642362C1C357700190599 /* UserFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFetch.swift; sourceTree = "<group>"; };
-		B11642392C1C35E600190599 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		B116BC632C1C43730061F8EE /* ChatCreate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCreate.swift; sourceTree = "<group>"; };
 		B12358392C43E7DF00F087AC /* TravelPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelPlanView.swift; sourceTree = "<group>"; };
 		B123583B2C440A4800F087AC /* TravelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewModel.swift; sourceTree = "<group>"; };
@@ -102,6 +102,10 @@
 		B15660782C17EE8500EC1A4A /* AuthenScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenScreen.swift; sourceTree = "<group>"; };
 		B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		B171DD572C76194800CAF1B2 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		B1D4B3452C82E75800D278D9 /* NotificationManeger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManeger.swift; sourceTree = "<group>"; };
+		B1D4B3472C833FC100D278D9 /* TraveLink.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TraveLink.entitlements; sourceTree = "<group>"; };
+		B1D4B3482C833FD600D278D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B1FE2BAB2C876218007CC2A4 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,7 @@
 				B15660512C1608DE00EC1A4A /* FirebaseFirestore in Frameworks */,
 				B156603D2C1608DE00EC1A4A /* FirebaseAnalyticsSwift in Frameworks */,
 				B15660392C1608DE00EC1A4A /* FirebaseAnalytics in Frameworks */,
+				B1FE2BAC2C876218007CC2A4 /* SafariServices.framework in Frameworks */,
 				B156603B2C1608DE00EC1A4A /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				B15660612C1608DE00EC1A4A /* FirebaseMLModelDownloader in Frameworks */,
 				B15660552C1608DE00EC1A4A /* FirebaseFirestoreSwift in Frameworks */,
@@ -212,7 +217,6 @@
 		B13AF76A2C2D0C58002CAEB3 /* Non use */ = {
 			isa = PBXGroup;
 			children = (
-				B11642392C1C35E600190599 /* UserProfile.swift */,
 			);
 			path = "Non use";
 			sourceTree = "<group>";
@@ -222,6 +226,7 @@
 			children = (
 				B15660222C10AAC100EC1A4A /* TraveLink */,
 				B15660212C10AAC100EC1A4A /* Products */,
+				B1FE2BAA2C876217007CC2A4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -236,6 +241,8 @@
 		B15660222C10AAC100EC1A4A /* TraveLink */ = {
 			isa = PBXGroup;
 			children = (
+				B1D4B3482C833FD600D278D9 /* Info.plist */,
+				B1D4B3472C833FC100D278D9 /* TraveLink.entitlements */,
 				B13BBAB92C72EF3800EAB85C /* TraveLinkDebug.entitlements */,
 				B15660232C10AAC100EC1A4A /* TraveLink.swift */,
 				B13BBAB52C70FFD600EAB85C /* ColorAsset.xcassets */,
@@ -243,6 +250,7 @@
 				B15660702C160A9000EC1A4A /* GoogleService-Info.plist */,
 				B15660292C10AAC800EC1A4A /* Preview Content */,
 				B13BBABA2C72F17100EAB85C /* MyAppCheckProviderFactory.swift */,
+				B1D4B3452C82E75800D278D9 /* NotificationManeger.swift */,
 			);
 			path = TraveLink;
 			sourceTree = "<group>";
@@ -260,6 +268,14 @@
 				B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B1FE2BAA2C876217007CC2A4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B1FE2BAB2C876218007CC2A4 /* SafariServices.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -369,6 +385,7 @@
 			files = (
 				B123583C2C440A4800F087AC /* TravelViewModel.swift in Sources */,
 				B11642332C19383B00190599 /* SearchCountryList.swift in Sources */,
+				B1D4B3462C82E75800D278D9 /* NotificationManeger.swift in Sources */,
 				B15660362C15FF8A00EC1A4A /* HomeTabScreen.swift in Sources */,
 				B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */,
 				B13BBABB2C72F17100EAB85C /* MyAppCheckProviderFactory.swift in Sources */,
@@ -393,7 +410,6 @@
 				B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */,
 				B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */,
 				B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */,
-				B116423A2C1C35E600190599 /* UserProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,8 +548,11 @@
 				DEVELOPMENT_TEAM = DBQLS32MZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TraveLink/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TraveLink;
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=*]" = TraveLink;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,14 +577,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TraveLink/TraveLink.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TraveLink/Preview Content\"";
 				DEVELOPMENT_TEAM = DBQLS32MZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TraveLink/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TraveLink;
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=*]" = TraveLink;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

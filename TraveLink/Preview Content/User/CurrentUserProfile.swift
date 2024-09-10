@@ -40,6 +40,12 @@ struct CurrentUserProfileView: View {
             VStack(spacing: 20) {
                 if isLoading {
                     ProgressView()
+                        .onAppear {
+                            // 5秒後にisLoadingをfalseに設定する
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                self.isLoading = false
+                            }
+                        }
                 } else {
                     // Profile Header
                     ProfileHeader(profileImage: profileImage, userName: userName)
@@ -234,7 +240,7 @@ struct CurrentUserProfileView: View {
         }
     }
     
-    func fetchUserData() {
+    /*func fetchUserData() {
         guard let user = Auth.auth().currentUser else {
             print("No user is currently logged in")
             isLoading = false
@@ -270,6 +276,48 @@ struct CurrentUserProfileView: View {
                 }
                 
                 isLoading = false
+            }
+    }*/
+    
+    func fetchUserData() {
+        guard let user = Auth.auth().currentUser else {
+            print("No user is currently logged in")
+            isLoading = false
+            return
+        }
+        print("email \(String(describing: user.email))")
+        let db = Firestore.firestore()
+        db.collection("users").whereField("email", isEqualTo: user.email ?? "")
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error getting documents: \(error)")
+                    isLoading = false
+                    return
+                }
+                
+                guard let document = querySnapshot?.documents.first else {
+                    print("No matching document")
+                    isLoading = false
+                    return
+                }
+                
+                if let name = document.data()["name"] as? String {
+                    self.userName = name
+                }
+                if let address = document.data()["location"] as? String {
+                    self.address = address
+                }
+                if let profileImageURL = document.data()["profileImageURL"] as? String {
+                    self.loadProfileImage(from: profileImageURL)
+                }
+                if let intro = document.data()["introduction"] as? String {
+                    self.introduction = intro
+                }
+                
+                // 全ての処理が完了したらisLoadingをfalseに設定
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
             }
     }
     

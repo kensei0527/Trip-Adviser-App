@@ -32,8 +32,8 @@ class UserProfileViewModel: ObservableObject {
             chatCreationViewModel.createChat(with: user.email) { newChatId in
                 if let newChatId = newChatId {
                     self.chatId = newChatId
-                    print(self.chatId)
-                    print("followCHeckok")
+                    //print(self.chatId)
+                    //print("followCHeckok")
                 }
             }
         } else {
@@ -82,7 +82,39 @@ class UserProfileViewModel: ObservableObject {
                     }
                     
                     self?.followRequestViewModel.addFollowRequest(self?.user.email ?? "", currentUserEmail)
+                    
+                    // FCMトークンを取得してプッシュ通知を送信
+                    self?.sendFollowRequestNotification()
                 }
+        }
+    }
+    
+    private func sendFollowRequestNotification() {
+        db.collection("users").document(user.email).getDocument { [weak self] (document, error) in
+            if let error = error {
+                print("Error fetching FCM token: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = document, document.exists,
+               let fcmToken = document.data()?["fcm"] as? String {
+                
+                PushNotificationSender.shared.sendPushNotification(
+                    to: fcmToken,
+                    userId: self?.user.email ?? "",
+                    title: "New Follow Request",
+                    body: "You Have New Follow Request"
+                ) { result in
+                    switch result {
+                    case .success(let messageId):
+                        print("Notification sent successfully with ID: \(messageId)")
+                    case .failure(let error):
+                        print("Failed to send notification: \(error.localizedDescription)")
+                    }
+                }
+            } else {
+                print("FCM token not found for user")
+            }
         }
     }
     

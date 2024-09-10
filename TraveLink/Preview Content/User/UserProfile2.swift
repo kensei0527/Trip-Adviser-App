@@ -18,7 +18,7 @@ struct UserProfileVieww: View {
     @State private var latitude = 0.0
     @State private var longitude = 0.0
     @State private var coordinate: CLLocationCoordinate2D?
-    @State private var showingActionSheet = false
+    @State private var showingActionMenu = false
     @State private var showingReportAlert = false
     @State private var showingBlockAlert = false
     
@@ -63,19 +63,28 @@ struct UserProfileVieww: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showingActionSheet = true
+                        showingActionMenu = true
                     }) {
                         Image(systemName: "ellipsis")
                     }
+                    .confirmationDialog("Options", isPresented: $showingActionMenu, titleVisibility: .visible) {
+                        Button("Report User") {
+                            showingReportAlert = true
+                        }
+                        Button("Block User", role: .destructive) {
+                            showingBlockAlert = true
+                        }
+                    }
                 }
             }
-            .actionSheet(isPresented: $showingActionSheet) {
+            /*.actionSheet(isPresented: $showingActionSheet) {
                 ActionSheet(title: Text("Options"), buttons: [
                     .default(Text("Report User")) { showingReportAlert = true },
                     .destructive(Text("Block User")) { showingBlockAlert = true },
                     .cancel()
                 ])
-            }
+            }*/
+            
             .alert(isPresented: $showingReportAlert) {
                 Alert(
                     title: Text("Report User"),
@@ -172,6 +181,9 @@ struct UserProfileVieww: View {
     
     private var actionButtons: some View {
         VStack(spacing: 12) {
+            Text("Follow each other to chat!")
+                .font(.headline)
+                .padding()
             Button(action: viewModel.toggleFollow) {
                 Text(viewModel.isFollowing ? "Unfollow" : "Follow")
                     .fontWeight(.semibold)
@@ -193,7 +205,7 @@ struct UserProfileVieww: View {
             }
             .disabled(!viewModel.isFollowing)
             
-            NavigationLink(destination: ChatView(chatId: viewModel.chatId ?? "")
+            NavigationLink(destination: ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
                 .environmentObject(authViewModel),
                            isActive: Binding(
                             get: { viewModel.chatId != nil },

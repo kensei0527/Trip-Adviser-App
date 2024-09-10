@@ -17,6 +17,7 @@ struct ChatView: View {
     @State private var scrollProxy: ScrollViewProxy?
     @Environment(\.dismiss) private var dismiss
     let chatId: String
+    let userName: String
     var userMail = Auth.auth().currentUser?.email
     @State private var db = Firestore.firestore()
     @State private var profileImages: [String: URL] = [:]
@@ -150,7 +151,7 @@ struct ChatView: View {
                     .foregroundColor(.gray)
             }*/
             
-            Text(self.otherParticipantEmail)
+            Text(self.userName)
                 .font(.system(size: 18, weight: .semibold))
             
             Spacer()
@@ -210,6 +211,7 @@ struct ChatView: View {
     private func sendMessage() {
         if !messageText.isEmpty, let senderId = userMail {
             chatViewModel.sendMessage(chatId: chatId, senderId: senderId, text: messageText)
+            self.sendMessageNotification(otherPartcipantsEmail: otherParticipantEmail, messageText: messageText)
             messageText = ""
         }
     }
@@ -217,6 +219,35 @@ struct ChatView: View {
     private func scrollToBottom() {
         withAnimation {
             scrollProxy?.scrollTo(chatViewModel.messages.last?.id, anchor: .bottom)
+        }
+    }
+    
+    private func sendMessageNotification(otherPartcipantsEmail: String, messageText: String) {
+        db.collection("users").document(otherPartcipantsEmail).getDocument { (document, error) in
+            if let error = error {
+                print("Error fetching FCM token: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = document, document.exists,
+               let fcmToken = document.data()?["fcm"] as? String {
+                
+                PushNotificationSender.shared.sendPushNotification(
+                    to: fcmToken,
+                    userId: otherPartcipantsEmail,
+                    title: "New Message",
+                    body: messageText
+                ) { result in
+                    switch result {
+                    case .success(let messageId):
+                        print("Notification sent successfully with ID: \(messageId)")
+                    case .failure(let error):
+                        print("Failed to send notification: \(error.localizedDescription)")
+                    }
+                }
+            } else {
+                print("FCM token not found for user")
+            }
         }
     }
 }
@@ -247,8 +278,8 @@ struct MessageBubble: View {
             
             Text(message.text)
                 .padding(12)
-                .background(isCurrentUser ? Color.blue : Color(.systemGray6))
-                .foregroundColor(isCurrentUser ? .white : .black)
+                .background(isCurrentUser ? Color.blue : Color.green)
+                .foregroundColor(isCurrentUser ? .white : .white)
                 .cornerRadius(20)
                 .frame(maxWidth: 280, alignment: isCurrentUser ? .trailing : .leading)
         }
