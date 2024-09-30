@@ -21,6 +21,7 @@ struct UserProfileVieww: View {
     @State private var showingActionMenu = false
     @State private var showingReportAlert = false
     @State private var showingBlockAlert = false
+    @State private var isChatting = false
     
     init(user: User) {
         _viewModel = StateObject(wrappedValue: UserProfileViewModel(user: user))
@@ -31,9 +32,11 @@ struct UserProfileVieww: View {
             ScrollView {
                 VStack(spacing: 20) {
                     profileHeader
+                    userRating
                     userInfo
                     introductionSection
                     actionButtons
+                    postsSection // 追加: ユーザーの投稿を表示するセクション
                 }
                 .padding()
             }
@@ -42,6 +45,8 @@ struct UserProfileVieww: View {
             .onAppear {
                 viewModel.checkFollowStatus()
                 viewModel.fetchUserIntroduction()
+                viewModel.fetchUserPosts() // 追加: ユーザーの投稿を取得
+                //print(viewModel.posts)
             }
             .sheet(isPresented: $showingMap) {
                 UserMapView(coordinate: coordinate)
@@ -131,13 +136,25 @@ struct UserProfileVieww: View {
         }
     }
     
+    private var userRating: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                Image(systemName: index < Int(viewModel.averageRating) ? "star.fill" : "star")
+                    .foregroundColor(.yellow)
+            }
+            Text(String(format: "%.1f", viewModel.averageRating))
+                .foregroundColor(.secondary)
+        }
+        .padding(.vertical)
+    }
+    
     private var userInfo: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
+            /*HStack {
                 Image(systemName: "envelope")
                     .foregroundColor(.blue)
-                Text(viewModel.user.email)
-            }
+                Text(viewModel.user.name)
+            }*/
             
             Button(action: {
                 showingMap = true
@@ -146,9 +163,11 @@ struct UserProfileVieww: View {
                         print("Error fetching user document: \(error.localizedDescription)")
                         return
                     }
-                    latitude = document?.data()?["latitude"] as! Double
-                    longitude = document?.data()?["longitude"] as! Double
-                    coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    if(document?.data()?["latitude"] != nil){
+                        latitude = document?.data()?["latitude"] as! Double
+                        longitude = document?.data()?["longitude"] as! Double
+                        coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    }
                 }
             }) {
                 HStack {
@@ -194,7 +213,7 @@ struct UserProfileVieww: View {
                     .cornerRadius(12)
             }
             
-            Button(action: viewModel.createAndStartChat) {
+            /*Button(action: viewModel.createAndStartChat) {
                 Text("Chat")
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
@@ -204,15 +223,100 @@ struct UserProfileVieww: View {
                     .cornerRadius(12)
             }
             .disabled(!viewModel.isFollowing)
+            .navigationDestination(isPresented: $isChatting){
+                ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
+            }*/
             
-            NavigationLink(destination: ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
+            Button(action:{
+                viewModel.getChatDocumentId(withUser: viewModel.user.email){ chatId in
+                    viewModel.chatId = chatId
+                    print(viewModel.chatId)
+                    viewModel.createAndStartChat()
+                    isChatting = true
+                }
+                
+                print(viewModel.chatId)
+            }) {
+                Text("Chat")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(viewModel.isFollowing ? Color.green : Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .disabled(!viewModel.isFollowing)
+            .navigationDestination(isPresented: $isChatting){
+                ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
+            }
+            
+            /*NavigationLink(destination: ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
                 .environmentObject(authViewModel),
                            isActive: Binding(
                             get: { viewModel.chatId != nil },
                             set: { if !$0 { viewModel.chatId = nil } }
                            )) {
                                EmptyView()
-                           }
+                           }*/
+        }
+    }
+    
+    private var postsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Post")
+                .font(.headline)
+                .padding(.bottom, 4)
+            
+            if viewModel.posts.isEmpty {
+                Text("No posts yet")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+            } else {
+                // スタイリッシュなグリッド表示
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 16)], spacing: 16) {
+                    ForEach(viewModel.posts) { post in
+                        NavigationLink(destination: TipDetailView(tip: post)) {
+                            PostGridItem(post: post)
+                        }
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+
+// 投稿を表示するためのカスタムビュー
+struct PostGridItem: View {
+    var post: TravelTip
+    
+    var body: some View {
+        ZStack {
+            if let imageUrlString = post.images.first, let imageUrl = URL(string: imageUrlString) {
+                AsyncImage(url: imageUrl) { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    Color.gray.opacity(0.3)
+                }
+                .frame(height: 150)
+                .clipped()
+                .cornerRadius(8)
+            } else {
+                Color.gray.opacity(0.3)
+                    .frame(height: 150)
+                    .cornerRadius(8)
+                Text(post.title)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+                    .padding(8)
+                    .background(Color.white.opacity(0.7))
+                    .cornerRadius(8)
+                    .padding(4)
+            }
         }
     }
 }

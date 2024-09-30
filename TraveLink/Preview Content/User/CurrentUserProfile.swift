@@ -12,6 +12,8 @@ import FirebaseStorage
 import MapKit
 
 struct CurrentUserProfileView: View {
+    @StateObject private var userReviewModel = UserReviewViewModel()
+    @StateObject private var tipViewModel = TravelTipViewModel()
     @State private var currentUserEmail: String = ""
     @State private var userLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503)  // デフォルトは東京
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503), span: MKCoordinateSpan(latitudeDelta: 2, longitudeDelta: 2))
@@ -29,6 +31,9 @@ struct CurrentUserProfileView: View {
     @State private var introduction: String = ""
     @State private var isEditingIntroduction: Bool = false
     @State private var showingSettingsView = false
+    @State private var showingReviews = false
+    @State private var selectedTip: TravelTip? 
+    @State private var showingDeleteConfirmation = false
     @Environment(\.dismiss) var dismiss
     
     private var db = Firestore.firestore()
@@ -49,6 +54,9 @@ struct CurrentUserProfileView: View {
                 } else {
                     // Profile Header
                     ProfileHeader(profileImage: profileImage, userName: userName)
+                    
+                    // User Rating
+                    userRating
                     
                     // Profile Actions
                     HStack(spacing: 20) {
@@ -121,11 +129,27 @@ struct CurrentUserProfileView: View {
                             Label("Update Location", systemImage: "location")
                         }
                         .buttonStyle(PrimaryButtonStyle())
+                        
+                        
                     }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(10)
                     .shadow(radius: 5)
+                    
+                    // 投稿一覧を表示
+                    // ユーザーの投稿一覧を表示
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("My Posts")
+                            .font(.headline)
+                            .padding(.leading)
+                        
+                        ForEach(tipViewModel.tips) { tip in
+                            UserTipRow(tip: tip, deleteAction: {
+                                deleteTip(tip)
+                            })
+                        }
+                    }
                 }
             }
             .padding()
@@ -136,9 +160,28 @@ struct CurrentUserProfileView: View {
         .onAppear {
             loadUserData()
             fetchUserData()
+            if let userEmail = Auth.auth().currentUser?.email {
+                userReviewModel.fetchReviews(for: userEmail)
+                currentUserEmail = userEmail
+                tipViewModel.fetchUserTips(userEmail: userEmail) // ユーザーの投稿を取得
+            }
+            userReviewModel.fetchReviews(for: currentUserEmail)
+            print(userReviewModel.averageRating)
         }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text(""), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+        .alert(isPresented: $showingDeleteConfirmation) {
+            Alert(
+                title: Text("Delete Post"),
+                message: Text("Are you sure you want to delete this post?"),
+                primaryButton: .destructive(Text("Delete")) {
+                    if let tip = selectedTip {
+                        tipViewModel.deleteTip(tip)
+                    }
+                },
+                secondaryButton: .cancel()
+            )
         }
         .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
             ImagePicker(image: $inputImage)
@@ -146,11 +189,15 @@ struct CurrentUserProfileView: View {
         .sheet(isPresented: $showingSettingsView) {
             SettingsView()
         }
+        .sheet(isPresented: $showingReviews) {
+            ReviewsListView(reviews: userReviewModel.reviews)
+        }
     }
     
     private var settingsButton: some View {
         Button(action: {
             showingSettingsView = true
+            userReviewModel.fetchReviews(for: currentUserEmail)
         }) {
             Image(systemName: "gear")
                 .foregroundColor(.blue)
@@ -163,27 +210,24 @@ struct CurrentUserProfileView: View {
         uploadProfileImage()
     }
     
-    /*func uploadProfileImage() {
-        guard let inputImage = inputImage,
-              let imageData = inputImage.jpegData(compressionQuality: 0.5),
-              let userEmail = Auth.auth().currentUser?.email else { return }
-        
-        let imagePath = "profile_images/\(userEmail).jpg"
-        let imageRef = storage.child(imagePath)
-        
-        imageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                self.alertMessage = "Error uploading image: \(error.localizedDescription)"
-                self.showingAlert = true
-            } else {
-                imageRef.downloadURL { url, error in
-                    if let downloadURL = url {
-                        self.updateUserProfileImageURL(url: downloadURL.absoluteString)
-                    }
+    private var userRating: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                if(!userReviewModel.averageRating.isNaN || userReviewModel.averageRating.isInfinite){
+                    Image(systemName: index < Int(userReviewModel.averageRating) ? "star.fill" : "star")
+                        .foregroundColor(.yellow)
+                }else{
+                    Image(systemName: "star")
                 }
             }
+            Text(String(format: "%.1f", userReviewModel.averageRating))
+                .foregroundColor(.secondary)
         }
-    }*/
+        .padding(.vertical)
+        .onTapGesture {
+            showingReviews = true
+        }
+    }
     
     func updateUserProfileImageURL(url: String) {
         guard let userEmail = Auth.auth().currentUser?.email else { return }
@@ -240,44 +284,7 @@ struct CurrentUserProfileView: View {
         }
     }
     
-    /*func fetchUserData() {
-        guard let user = Auth.auth().currentUser else {
-            print("No user is currently logged in")
-            isLoading = false
-            return
-        }
-        print("email \(String(describing: user.email))")
-        let db = Firestore.firestore()
-        db.collection("users").whereField("email", isEqualTo: user.email ?? "")
-            .getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                    isLoading = false
-                    return
-                }
-                
-                guard let document = querySnapshot?.documents.first else {
-                    print("No matching document")
-                    isLoading = false
-                    return
-                }
-                
-                if let name = document.data()["name"] as? String {
-                    self.userName = name
-                }
-                if let address = document.data()["location"] as? String{
-                    self.address = address
-                }
-                if let profileImageURL = document.data()["profileImageURL"] as? String {
-                    self.loadProfileImage(from: profileImageURL)
-                }
-                if let intro = document.data()["introduction"] as? String {
-                    self.introduction = intro
-                }
-                
-                isLoading = false
-            }
-    }*/
+    
     
     func fetchUserData() {
         guard let user = Auth.auth().currentUser else {
@@ -423,6 +430,12 @@ struct CurrentUserProfileView: View {
             print("Error signing out: \(signOutError.localizedDescription)")
         }
     }
+    
+    // 削除アクションの実装
+    func deleteTip(_ tip: TravelTip) {
+        selectedTip = tip
+        showingDeleteConfirmation = true
+    }
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
@@ -484,6 +497,27 @@ struct ProfileHeader: View {
                 .font(.title)
                 .fontWeight(.bold)
         }
+    }
+}
+
+struct ReviewsListView: View {
+    let reviews: [Review]
+    
+    var body: some View {
+        List(reviews, id: \.comment) { review in
+            VStack(alignment: .leading) {
+                //Text(review.)
+                HStack {
+                    ForEach(0..<5) { index in
+                        Image(systemName: index < review.rating ? "star.fill" : "star")
+                            .foregroundColor(.yellow)
+                    }
+                }
+                Text(review.comment)
+                    .padding(.top, 4)
+            }
+        }
+        .navigationTitle("Reviews")
     }
 }
 

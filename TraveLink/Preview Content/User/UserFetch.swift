@@ -98,62 +98,7 @@ class UserFetchModel: ObservableObject {
             }
     }
     
-    /*@MainActor
-    func fetchFollowUser()async{
-        isLoading = true
-        errorMessage = nil
-        do{
-            guard let user = Auth.auth().currentUser else {
-                print("No user is currently logged in")
-                return
-            }
-            let docRef = db.collection("followers").document(user.email ?? "")
-            let document = try await docRef.getDocument()
-            
-            if document.exists {
-                if let fieldValue = document.get("followers") as? [String] {
-                    self.followers = fieldValue
-                } else {
-                    print("指定されたフィールドは存在しません")
-                }
-            } else {
-                print("ドキュメントが見つかりません")
-            }
-            
-            let usersRef = db.collection("users")
-            var fetchedUsers: [User] = []
-            for email in followers {
-                print(email)
-                let querySnapshot = try await db.collection("users").whereField("email", isEqualTo: email).getDocuments()
-                    for document in querySnapshot.documents {
-                            let data = document.data()
-                            let name = data["name"] as? String ?? ""
-                            let email = data["email"] as? String ?? ""
-                            let location = data["location"] as? String ?? ""
-                            let profileImageURLString = data["profileImageURL"] as? String ?? ""
-                            let profileImageURL = URL(string: profileImageURLString)
-                            let user = User(id: document.documentID,
-                                            name: name,
-                                            email: email,
-                                            location: location,
-                                            profileImageURL: profileImageURL)
-                            fetchedUsers.append(user)
-                            //print(self.useredFollowers)
-                        
-                    }
-                }
-            self.useredFollowers = fetchedUsers
-            self.isLoading = false
-            }
-        catch{
-            await MainActor.run {
-                self.errorMessage = "ユーザー情報の取得に失敗しました: \(error.localizedDescription)"
-                self.isLoading = false
-            }
-        
-        }
-        
-    }*/
+    
     
     @MainActor
     func fetchFollowUser() async {

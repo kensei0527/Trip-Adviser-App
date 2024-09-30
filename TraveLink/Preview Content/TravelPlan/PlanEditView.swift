@@ -7,16 +7,23 @@
 
 import SwiftUI
 import Firebase
+import FirebaseAuth
 
 struct TripDetailView: View {
     @ObservedObject var viewModel: TripViewModel
     @StateObject var userFetchModel = UserFetchModel()
-    @StateObject var sharedState = SharedTripEditorState()
+    @StateObject var sharedReviewState = UserReviewViewModel()
+    //@StateObject var sharedState = SharedTripEditorState()
     var userList: [User]
     let trip: Trip
+    @State var reviewedUser: String = ""
     @State private var showingAddActivity = false
     @State private var showingAddEditor = false
     @State private var selectedActivity: Activity?
+    @State private var isTripCompleted = false
+    @State private var newEditors: [String: UserRole] = [:]
+    
+    @Environment(\.presentationMode) var presentationMode
     
     
     func sectionFor() -> some View{
@@ -35,54 +42,92 @@ struct TripDetailView: View {
     }
     
     var body: some View {
-        List {
-            sectionFor()
-        }
-        .listStyle(PlainListStyle())
-        .navigationTitle(trip.title)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: { showingAddActivity = true }) {
-                    Image(systemName: "plus")
+        NavigationStack {
+            List {
+                sectionFor()
+            }
+            .listStyle(PlainListStyle())
+            .navigationTitle(trip.title)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: { showingAddActivity = true }) {
+                        Image(systemName: "plus")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showingAddEditor = true
+                    }) {
+                        Image(systemName: "person.3.sequence")
+                    }
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button(action: {
+                        if(isTripCompleted == false){
+                            sharedReviewState.isReviewNeeded = true
+                        }
+                        toggleTripCompletion()
+                        if(trip.advisors != nil){
+                            self.reviewedUser = trip.advisors[0]
+                        }else{
+                            sharedReviewState.isReviewNeeded = false
+                        }
+                    }) {
+                        Text(isTripCompleted ? "Reopen Trip" : "Complete Trip")
+                    }
+                    .disabled(viewModel.isUpdatingTripStatus)
+                }
+            }
+            .sheet(isPresented: $showingAddActivity) {
+                AddActivityView(viewModel: viewModel, trip: trip, isPresented: $showingAddActivity)
+            }
+            .sheet(item: $selectedActivity) { activity in
+                EditActivityView(viewModel: viewModel, trip: trip, activity: activity, isPresented: Binding(
+                    get: { selectedActivity != nil },
+                    set: { if !$0 { selectedActivity = nil } }
+                ))
+            }
+            .sheet(isPresented: $showingAddEditor) {
+                AddTripEditerView(trip: trip, userlist: userList) { editors in
+                    self.newEditors = editors as [String: UserRole]
+                }
+            }
+            .sheet(isPresented: .init(
+                get: { sharedReviewState.isReviewNeeded },
+                set: { if !$0 { sharedReviewState.isReviewNeeded = false } }
+            )) {
+                if(reviewedUser == ""){
+                    AddReviewView(targetUserId: reviewedUser,
+                                  currentUserId: (Auth.auth().currentUser?.email)! as String,
+                                  sharedReviewState: sharedReviewState)
+                }
+            }
+            .onAppear {
+                viewModel.fetchActivities(for: trip)
+                viewModel.fetchTripCompletionStatus(for: trip) { status in
+                    isTripCompleted = status
+                }
+                reviewedUser = trip.advisors[0]
+            }
+            .onChange(of: showingAddEditor) { isPresented in
+                if !isPresented && !newEditors.isEmpty {
+                    viewModel.addEditors(to: trip, editors: newEditors)
+                    newEditors = [:]
+                    viewModel.fetchActivities(for: trip)
+                }
+                else if(!isPresented){
+                    viewModel.fetchActivities(for: trip)
+                }
+            }
+            .onChange(of: sharedReviewState.isReviewCompleted) { completed in
+                if completed {
+                    presentationMode.wrappedValue.dismiss()
                 }
             }
         }
-        .toolbar{
-            NavigationLink(destination: AddTripEditerView(trip: trip, userlist: userList){ newEditors in
-                //print(trip.title)
-                viewModel.addEditors(to: trip, editors: newEditors)
-                
-            },
-            isActive: $sharedState.isAddEditorViewPresented
-            ){
-                Image(systemName: "person.3.sequence")
-            }
-            .environmentObject(sharedState)
-            
-            .onDisappear{
-                viewModel.fetchActivities(for: trip)
-            }
-        }
-        .onChange(of: sharedState.isAddEditorViewPresented) { isPresented in
-            if !isPresented {
-                viewModel.fetchActivities(for: trip)
-            }
-        }
-        .onAppear {
-            viewModel.fetchActivities(for: trip)
-        }
-        .sheet(isPresented: $showingAddActivity) {
-            AddActivityView(viewModel: viewModel, trip: trip, isPresented: $showingAddActivity)
-        }
-        .sheet(item: $selectedActivity) { activity in
-            EditActivityView(viewModel: viewModel, trip: trip, activity: activity, isPresented: Binding(
-                get: { selectedActivity != nil },
-                set: { if !$0 { selectedActivity = nil } }
-            ))
-        }
-        .environmentObject(sharedState)
     }
-
     
     private var groupedActivities: [(Date, [Activity])] {
         let grouped = Dictionary(grouping: trip.activities) { activity in
@@ -103,6 +148,22 @@ struct TripDetailView: View {
         offsets.forEach { index in
             let activity = activitiesForDate[index]
             viewModel.deleteActivity(activity, from: trip)
+        }
+    }
+    
+    private func toggleTripCompletion() {
+        isTripCompleted.toggle()
+        viewModel.updateTripCompletionStatus(for: trip, isCompleted: isTripCompleted) { result in
+            switch result {
+            case .success:
+                print("Trip completion status updated successfully")
+                if isTripCompleted {
+                    sharedReviewState.isReviewNeeded = true
+                }
+            case .failure(let error):
+                print("Failed to update trip completion status: \(error.localizedDescription)")
+                isTripCompleted.toggle()
+            }
         }
     }
 }
@@ -200,86 +261,3 @@ struct TimelineItemView: View {
     }
 }
 
-struct AddTripEditerView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject private var userFetchModel = UserFetchModel()
-    @State private var selectedUsers: Set<String> = []
-    @EnvironmentObject var sharedState: SharedTripEditorState
-    var trip: Trip
-    var userlist: [User]
-    var onComplete: ([String]) -> Void
-
-    
-    
-    
-    var body: some View {
-        
-        
-        
-        List(userlist) { user in
-            HStack {
-                AsyncImage(url: user.profileImageURL) { image in
-                    image.resizable()
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 50, height: 50)
-                .clipShape(Circle())
-                
-                VStack(alignment: .leading) {
-                    Text(user.name)
-                        .font(.headline)
-                    Text(user.email)
-                        .font(.subheadline)
-                    //.foreground(Color.gray)
-                }
-                
-                Spacer()
-                
-                if selectedUsers.contains(user.id) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.blue)
-                }
-            }
-            
-            .onTapGesture {
-                if selectedUsers.contains(user.id) {
-                    selectedUsers.remove(user.id)
-                } else {
-                    selectedUsers.insert(user.id)
-                }
-            }
-        }
-        
-        //.onAppear(perform: userFetchModel.fetchFollowUser)
-        .task{
-            //print("onappear")
-            await userFetchModel.fetchFollowUser()
-            //print(userFetchModel.useredFollowers)
-        }
-        .navigationTitle("Add New Editor: \(trip.title)")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Done") {
-                    let newEditors = Array(selectedUsers)
-                    onComplete(newEditors)
-                    sharedState.isAddEditorViewPresented = false
-                    dismiss()
-                }
-                
-            }
-        }
-        .toolbar{
-            ToolbarItem(placement: .topBarTrailing){
-                Button(action: {
-                    Task {
-                        await userFetchModel.fetchFollowUser()
-                    }},
-                       label: {
-                    Image(systemName: "arrow.clockwise")
-                })
-            }
-        }
-    }
-    
-}

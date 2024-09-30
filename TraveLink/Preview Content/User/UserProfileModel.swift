@@ -18,6 +18,8 @@ class UserProfileViewModel: ObservableObject {
     @Published var chatId: String?
     @Published var userCoordinate: CLLocationCoordinate2D?
     @Published var userIntroduction: String = ""
+    @Published var averageRating: Double = 0.0
+    @Published var posts: [TravelTip] = [] // 追加: ユーザーの投稿を保持
     
     private var db = Firestore.firestore()
     private var chatCreationViewModel = ChatCreationViewModel()
@@ -25,22 +27,70 @@ class UserProfileViewModel: ObservableObject {
     
     init(user: User) {
         self.user = user
+        fetchAverageRating()
+        fetchUserIntroduction()
+        checkFollowStatus()
+        fetchUserPosts() // 追加: ユーザーの投稿を取得
     }
     
     func createAndStartChat() {
         if isFollowing {
+            
             chatCreationViewModel.createChat(with: user.email) { newChatId in
-                if let newChatId = newChatId {
-                    self.chatId = newChatId
+                if newChatId != nil {
+                    //self.chatId = newChatId
                     //print(self.chatId)
                     //print("followCHeckok")
                 }
+                //self.chatId = "DAONdZBdRNOGuJjhjzHr"
             }
         } else {
             showingChatAlert = true
             print("followCHeck NO")
         }
     }
+    
+    func getChatDocumentId(withUser userEmail: String, completion: @escaping (String?) -> Void) {
+        guard let currentUserEmail = Auth.auth().currentUser?.email else {
+            print("Current user is not logged in")
+            completion(nil)
+            return
+        }
+        
+        let chatsRef = db.collection("chats")
+        
+        // 現在のユーザーのメールアドレスを含むチャットを取得
+        chatsRef.whereField("participants", arrayContains: currentUserEmail).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error getting chats: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                print("No chats found")
+                completion(nil)
+                return
+            }
+            
+            // 相手のユーザーのメールアドレスを含むチャットをフィルタリング
+            for document in documents {
+                let data = document.data()
+                if let participants = data["participants"] as? [String],
+                   participants.contains(userEmail) {
+                    // 条件に一致するチャットのドキュメントIDを返す
+                    completion(document.documentID)
+                    return
+                }
+            }
+            
+            // 条件に一致するチャットがない場合
+            completion(nil)
+        }
+    }
+    
+    
+    
     
     func checkFollowStatus() {
         guard let currentUserEmail = Auth.auth().currentUser?.email else { return }
@@ -180,5 +230,65 @@ class UserProfileViewModel: ObservableObject {
                 print("User blocked successfully")
             }
         }
+    }
+    
+    func fetchAverageRating() {
+        db.collection("users").document(user.email).collection("reviews").getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error getting reviews: \(error)")
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents, !documents.isEmpty else {
+                self.averageRating = 0.0
+                return
+            }
+            
+            let totalRating = documents.compactMap { $0.data()["rating"] as? Double }.reduce(0, +)
+            self.averageRating = totalRating / Double(documents.count)
+        }
+    }
+    
+    // 追加: ユーザーの投稿を取得するメソッド
+    func fetchUserPosts() {
+        db.collection("travelTips")
+            .whereField("authorId", isEqualTo: user.email) // もしくは user.uid に変更
+            .order(by: "createdAt", descending: true)
+            .getDocuments { [weak self] snapshot, error in
+                if let error = error {
+                    print("Error fetching user posts: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let documents = snapshot?.documents {
+                    self?.posts = documents.compactMap { document in
+                        let data = document.data()
+                        let id = document.documentID
+                        let authorId = data["authorId"] as? String ?? ""
+                        let tripId = data["tripId"] as? String
+                        let categoryString = data["category"] as? String ?? ""
+                        let category = TipCategory(rawValue: categoryString) ?? .other
+                        let title = data["title"] as? String ?? ""
+                        let content = data["content"] as? String ?? ""
+                        let images = data["images"] as? [String] ?? []
+                        let createdAt = (data["createdAt"] as? Timestamp)?.dateValue() ?? Date()
+                        let likes = data["likes"] as? Int ?? 0
+                        let likedBy = data["likedBy"] as? [String] ?? []
+                        
+                        return TravelTip(
+                            id: id,
+                            authorId: authorId,
+                            tripId: tripId,
+                            category: category,
+                            title: title,
+                            content: content,
+                            images: images,
+                            createdAt: createdAt,
+                            likes: likes,
+                            likedBy: likedBy
+                        )
+                    }
+                }
+            }
     }
 }

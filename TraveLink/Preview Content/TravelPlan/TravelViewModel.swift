@@ -19,6 +19,8 @@ struct Trip: Identifiable {
     var endDate: Date
     var activities: [Activity]
     var participants: [String]  // 参加者のユーザーIDを格納
+    var advisors: [String]
+    var isCompleted: Bool
 }
 
 struct Activity: Identifiable, Equatable {
@@ -42,6 +44,11 @@ enum ActivityType: String, CaseIterable {
     case dinner = "Dinner"
 }
 
+enum UserRole: String, CaseIterable {
+    case editor = "Editor"
+    case advisor = "Advisor"
+}
+
 // MARK: - View Model
 
 class SharedTripEditorState: ObservableObject {
@@ -51,6 +58,7 @@ class SharedTripEditorState: ObservableObject {
 class TripViewModel: ObservableObject {
     @Published var trips: [Trip] = []
     @Published var currentTrip: Trip?
+    @Published var isUpdatingTripStatus = false
     
     let calendar = Calendar(identifier: .gregorian)
     
@@ -65,8 +73,8 @@ class TripViewModel: ObservableObject {
             return
         }
         
-        db.collection("trips").whereField("participants", arrayContains: userId).addSnapshotListener { querySnapshot, error in
-            guard let documents = querySnapshot?.documents else {
+        db.collection("trips").whereField("participants", arrayContains: userId).addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self, let documents = querySnapshot?.documents else {
                 print("Error fetching trips: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
@@ -75,11 +83,85 @@ class TripViewModel: ObservableObject {
                 let data = document.data()
                 let id = document.documentID
                 let title = data["title"] as? String ?? ""
-                let startDate = (data["startDate"] as? Timestamp)?.dateValue() ?? Date() //as? Date ?? self.calendar.date(from: DateComponents(year: 2000, month: 1, day: 1))
-                let endDate = (data["endDate"] as? Timestamp)?.dateValue() ?? Date() //as? Date ?? self.calendar.date(from: DateComponents(year: 2000, month: 1, day: 1))
+                let startDate = (data["startDate"] as? Timestamp)?.dateValue() ?? Date()
+                let endDate = (data["endDate"] as? Timestamp)?.dateValue() ?? Date()
                 let participants = data["participants"] as? [String] ?? []
-                return Trip(id: id, title: title, startDate: startDate, endDate: endDate, activities: [], participants: participants)
+                let isCompleted = data["done"] as? Bool ?? false
+                let advisor = data["advisors"] as? [String] ?? []
+                return Trip(id: id, title: title, startDate: startDate, endDate: endDate, activities: [], participants: participants, advisors: advisor, isCompleted: isCompleted)
             }
+        }
+    }
+    
+    var incompleteTrips: [Trip] {
+        return trips.filter { !$0.isCompleted }
+    }
+    
+    var completedTrips: [Trip] {
+        return trips.filter { $0.isCompleted }
+    }
+    
+    func updateTripCompletionStatus(for trip: Trip, isCompleted: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        isUpdatingTripStatus = true
+        let db = Firestore.firestore()
+        db.collection("trips").document(trip.id).updateData(["done": isCompleted]) { error in
+            self.isUpdatingTripStatus = false
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                if let index = self.trips.firstIndex(where: { $0.id == trip.id }) {
+                    self.trips[index].isCompleted = isCompleted
+                }
+                completion(.success(()))
+            }
+        }
+    }
+    
+    func updateTrip(_ trip: Trip, title: String, startDate: Date, endDate: Date) async throws {
+        let tripRef = db.collection("trips").document(trip.id)
+        let updatedData: [String: Any] = [
+            "title": title,
+            "startDate": Timestamp(date: startDate),
+            "endDate": Timestamp(date: endDate)
+        ]
+        
+        try await tripRef.updateData(updatedData)
+        
+        if let index = trips.firstIndex(where: { $0.id == trip.id }) {
+            trips[index].title = title
+            trips[index].startDate = startDate
+            trips[index].endDate = endDate
+        }
+        
+        if currentTrip?.id == trip.id {
+            currentTrip?.title = title
+            currentTrip?.startDate = startDate
+            currentTrip?.endDate = endDate
+        }
+    }
+    
+    // 新しいメソッド: 参加者の削除
+    func removeParticipant(_ email: String, from trip: Trip) async throws {
+        let tripRef = db.collection("trips").document(trip.id)
+        try await tripRef.updateData([
+            "participants": FieldValue.arrayRemove([email])
+        ])
+        
+        if let index = trips.firstIndex(where: { $0.id == trip.id }) {
+            trips[index].participants.removeAll { $0 == email }
+        }
+        
+        if currentTrip?.id == trip.id {
+            currentTrip?.participants.removeAll { $0 == email }
+        }
+    }
+    
+    // 新しいメソッド: 旅程の検索
+    func searchTrips(with query: String) -> [Trip] {
+        let lowercasedQuery = query.lowercased()
+        return trips.filter { trip in
+            trip.title.lowercased().contains(lowercasedQuery) ||
+            trip.activities.contains { $0.description.lowercased().contains(lowercasedQuery) }
         }
     }
     
@@ -191,18 +273,52 @@ class TripViewModel: ObservableObject {
         }
     }
     
-    func addEditors(to trip: Trip, editors: [String]) {
+    func addEditors(to trip: Trip, editors: [String: UserRole]) {
         let tripRef = db.collection("trips").document(trip.id)
+        
+        var newParticipants: [String] = []
+        var newAdvisors: [String] = []
+        
+        for (userEmail, role) in editors {
+            newParticipants.append(userEmail)
+            if role == .advisor {
+                newAdvisors.append(userEmail)
+            }
+        }
+        
         tripRef.updateData([
-            "participants": FieldValue.arrayUnion(editors)
+            "participants": FieldValue.arrayUnion(newParticipants),
+            "advisors": FieldValue.arrayUnion(newAdvisors)
         ]) { error in
             if let error = error {
                 print("Error adding editors: \(error.localizedDescription)")
             } else {
                 self.fetchTrips() // 更新後にトリップリストを再取得
+                if self.currentTrip?.id == trip.id {
+                    self.currentTrip?.participants.append(contentsOf: newParticipants)
+                    self.currentTrip?.advisors.append(contentsOf: newAdvisors)
+                }
             }
         }
     }
+    
+    
+    
+    
+    func fetchTripCompletionStatus(for trip: Trip, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        db.collection("trips").document(trip.id).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let isCompleted = document.data()?["done"] as? Bool ?? false
+                completion(isCompleted)
+            } else {
+                print("Document does not exist or error: \(error?.localizedDescription ?? "Unknown error")")
+                completion(false)
+            }
+        }
+    }
+    
+    
 }
 
 

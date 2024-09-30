@@ -12,17 +12,24 @@ import FirebaseAuth
 
 struct AuthenScreen: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    @AppStorage("isFirstLaunch") private var isFirstLaunch: Bool = true
     
     var body: some View {
-        NavigationStack {
-            if viewModel.isSignedIn {
-                HomeScreen()
-            }else {
-                SignInView()
+        Group{
+            NavigationStack {
+                if viewModel.isSignedIn {
+                    HomeScreen()
+                    
+                }else {
+                    SignInView()
+                }
+            }
+            .onAppear {
+                viewModel.isSignedIn = Auth.auth().currentUser != nil
             }
         }
-        .onAppear {
-            viewModel.isSignedIn = Auth.auth().currentUser != nil
+        .fullScreenCover(isPresented: $isFirstLaunch) {
+            OnboardingView(isFirstLaunch: $isFirstLaunch)
         }
     }
 }
