@@ -23,6 +23,8 @@ struct ChatView: View {
     @State private var profileImages: [String: URL] = [:]
     @State var youUserImage: URL? = nil
     @State var otherParticipantEmail: String = ""
+    @State private var isImagePickerPresented = false
+    @State private var selectedImage: UIImage?
     
     func fetchOtherParticipant (){
         let db = Firestore.firestore()
@@ -82,7 +84,9 @@ struct ChatView: View {
                             MessageBubble(message: message, isCurrentUser: message.senderId == userMail, profileImageURL: profileImages[message.senderId])
                                 .id(message.id)
                                 .onAppear {
-                                    getProfileImage(senderId: message.senderId)
+                                    if(message.senderId != ""){
+                                        getProfileImage(senderId: message.senderId)
+                                    }
                                     self.youUserImage = profileImages[message.senderId]
                                 }
                         }
@@ -101,13 +105,19 @@ struct ChatView: View {
             // Message input
             messageInputBar
         }
+        .sheet(isPresented: $isImagePickerPresented) {
+            ImagePicker(image: $selectedImage)
+        }
         .navigationBarHidden(true)
         .onAppear {
-            chatViewModel.fetchMessages(chatId: chatId)
-            fetchOtherParticipant()
-            print(otherParticipantEmail)
-            //getProfileImage(senderId: otherParticipantEmail)
-            //self.youUserImage = profileImages[otherParticipantEmail]
+            print(chatId)
+            if(chatId != ""){
+                chatViewModel.fetchMessages(chatId: chatId)
+                fetchOtherParticipant()
+                //print(otherParticipantEmail)
+                //getProfileImage(senderId: otherParticipantEmail)
+                //self.youUserImage = profileImages[otherParticipantEmail]
+            }
         }
         .onDisappear {
             chatViewModel.stopListening()
@@ -169,7 +179,7 @@ struct ChatView: View {
             
         }
         .onAppear{
-            fetchOtherParticipant()
+            //fetchOtherParticipant()
             
             if(self.otherParticipantEmail != ""){
                 print(self.otherParticipantEmail)
@@ -185,13 +195,13 @@ struct ChatView: View {
     
     private var messageInputBar: some View {
         HStack(spacing: 12) {
-            /*Button(action: {
-                // Handle camera action
+            Button(action: {
+                isImagePickerPresented = true
             }) {
                 Image(systemName: "camera")
                     .font(.system(size: 24))
                     .foregroundColor(.primary)
-            }*/
+            }
             
             TextField("Message...", text: $messageText)
                 .padding(10)
@@ -208,13 +218,40 @@ struct ChatView: View {
         .background(Color(.systemBackground))
     }
     
+    
+    
     private func sendMessage() {
-        if !messageText.isEmpty, let senderId = userMail {
+        if let image = selectedImage {
+            chatViewModel.uploadImage(image) { result in
+                switch result {
+                case .success(let url):
+                    sendMessageWithImage(imageURL: url)
+                case .failure(let error):
+                    print("Failed to upload image: \(error.localizedDescription)")
+                }
+            }
+            selectedImage = nil
+        } else if !messageText.isEmpty {
+            sendTextMessage()
+        }
+    }
+    
+    private func sendTextMessage() {
+        if let senderId = userMail {
             chatViewModel.sendMessage(chatId: chatId, senderId: senderId, text: messageText)
-            self.sendMessageNotification(otherPartcipantsEmail: otherParticipantEmail, messageText: messageText)
+            sendMessageNotification(otherPartcipantsEmail: otherParticipantEmail, messageText: messageText)
             messageText = ""
         }
     }
+    
+    private func sendMessageWithImage(imageURL: String) {
+        if let senderId = userMail {
+            chatViewModel.sendMessage(chatId: chatId, senderId: senderId, text: messageText, imageURL: imageURL)
+            sendMessageNotification(otherPartcipantsEmail: otherParticipantEmail, messageText: "Sent an image")
+            messageText = ""
+        }
+    }
+
     
     private func scrollToBottom() {
         withAnimation {
@@ -276,12 +313,29 @@ struct MessageBubble: View {
                 Spacer()
             }
             
-            Text(message.text)
-                .padding(12)
-                .background(isCurrentUser ? Color.blue : Color.green)
-                .foregroundColor(isCurrentUser ? .white : .white)
-                .cornerRadius(20)
-                .frame(maxWidth: 280, alignment: isCurrentUser ? .trailing : .leading)
+            VStack(alignment: isCurrentUser ? .trailing : .leading) {
+                if let imageURL = message.imageURL, let url = URL(string: imageURL) {
+                    AsyncImage(url: url) { image in
+                        image.resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: 200, maxHeight: 200)
+                            .cornerRadius(10)
+                    } placeholder: {
+                        ProgressView()
+                    }
+                }
+                
+                if !message.text.isEmpty {
+                    Text(message.text)
+                        .padding(12)
+                        .background(isCurrentUser ? Color.blue : Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(20)
+                }
+            }
+            .frame(maxWidth: 280, alignment: isCurrentUser ? .trailing : .leading)
+
+            
         }
     }
 }

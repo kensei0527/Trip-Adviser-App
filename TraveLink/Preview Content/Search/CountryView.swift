@@ -17,9 +17,16 @@ struct CountryView: View {
         NavigationView {
             ScrollView {
                 LazyVStack(spacing: 20) {
-                    ForEach(viewModel.countries, id: \.self) { country in
+                    ForEach(Array(viewModel.countries.enumerated()), id: \.element) { index, country in
                         NavigationLink(destination: NationScreen(countryName: country)) {
                             CountryCard(countryName: country, width: .infinity, height: 200)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        // 3つごとに広告を挿入
+                        if index % 5 == 4 {
+                            AdMobBannerView()
+                                .frame(height: 50)
                         }
                     }
                 }
@@ -28,15 +35,6 @@ struct CountryView: View {
             .navigationTitle("Explore Countries")
             .navigationSplitViewStyle(.automatic)
             .navigationViewStyle(StackNavigationViewStyle())
-            /*.toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showingAlert = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }*/
         }
         .navigationViewStyle(.stack)
         .alert("Add New Country", isPresented: $showingAlert) {
@@ -79,13 +77,8 @@ struct CountryCard: View {
                     .cornerRadius(10)
             }
         }
+        .frame(width: width, height: height)
         .cornerRadius(20)
         .shadow(radius: 10)
-    }
-}
-
-struct CountryView_Previews: PreviewProvider {
-    static var previews: some View {
-        CountryView()
     }
 }

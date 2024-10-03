@@ -19,6 +19,15 @@
 		B123583C2C440A4800F087AC /* TravelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B123583B2C440A4800F087AC /* TravelViewModel.swift */; };
 		B123583E2C45673600F087AC /* TravelActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B123583D2C45673600F087AC /* TravelActivityView.swift */; };
 		B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */; };
+		B1302D182C97370600A0EF3C /* TravelTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D172C97370500A0EF3C /* TravelTipViewModel.swift */; };
+		B1302D1A2C97377B00A0EF3C /* CreateTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D192C97377B00A0EF3C /* CreateTipsView.swift */; };
+		B1302D1C2C97E5CD00A0EF3C /* TimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D1B2C97E5CD00A0EF3C /* TimeLineView.swift */; };
+		B1302D1E2C97E65800A0EF3C /* TipRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D1D2C97E65800A0EF3C /* TipRowView.swift */; };
+		B1302D202C97E68200A0EF3C /* TipDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D1F2C97E68200A0EF3C /* TipDetailView.swift */; };
+		B1302D222C97E96200A0EF3C /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D212C97E96200A0EF3C /* CommentViewModel.swift */; };
+		B1302D242C9884E800A0EF3C /* TripCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D232C9884E800A0EF3C /* TripCardView.swift */; };
+		B1302D262C988D2C00A0EF3C /* WelcomeModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D252C988D2C00A0EF3C /* WelcomeModalView.swift */; };
+		B1302D2C2C9957EC00A0EF3C /* UserTipRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302D2B2C9957EC00A0EF3C /* UserTipRowView.swift */; };
 		B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */; };
 		B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */; };
 		B13AF7692C2D0AAD002CAEB3 /* UserProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13AF7682C2D0AAD002CAEB3 /* UserProfileModel.swift */; };
@@ -65,6 +74,14 @@
 		B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660782C17EE8500EC1A4A /* AuthenScreen.swift */; };
 		B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */; };
 		B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B171DD572C76194800CAF1B2 /* SignupView.swift */; };
+		B1A8FC482C9CA0E0001C5976 /* AdMobManeger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A8FC472C9CA0D7001C5976 /* AdMobManeger.swift */; };
+		B1BB67672C9A9F4A00A8ABCB /* NaitiveAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BB67662C9A9F0700A8ABCB /* NaitiveAdView.swift */; };
+		B1C65F932C929F3D001E237A /* TripCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C65F922C929F3D001E237A /* TripCard.swift */; };
+		B1C65F952C92AAC8001E237A /* AddEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C65F942C92AAC8001E237A /* AddEditorView.swift */; };
+		B1C65F992C9551FF001E237A /* UserReviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C65F982C9551FF001E237A /* UserReviewModel.swift */; };
+		B1C65F9C2C95538C001E237A /* AddReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C65F9B2C95538C001E237A /* AddReviewView.swift */; };
+		B1C876892C99C6F300C9E865 /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C876882C99C6DC00C9E865 /* BannerAdView.swift */; };
+		B1C8768C2C99C7AC00C9E865 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = B1C8768B2C99C7AC00C9E865 /* GoogleMobileAds */; };
 		B1D4B3462C82E75800D278D9 /* NotificationManeger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D4B3452C82E75800D278D9 /* NotificationManeger.swift */; };
 		B1FE2BAC2C876218007CC2A4 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1FE2BAB2C876218007CC2A4 /* SafariServices.framework */; };
 /* End PBXBuildFile section */
@@ -82,6 +99,15 @@
 		B123583B2C440A4800F087AC /* TravelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewModel.swift; sourceTree = "<group>"; };
 		B123583D2C45673600F087AC /* TravelActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelActivityView.swift; sourceTree = "<group>"; };
 		B12E29552C29AF67005E2BA8 /* FollowRquestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowRquestModel.swift; sourceTree = "<group>"; };
+		B1302D172C97370500A0EF3C /* TravelTipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTipViewModel.swift; sourceTree = "<group>"; };
+		B1302D192C97377B00A0EF3C /* CreateTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTipsView.swift; sourceTree = "<group>"; };
+		B1302D1B2C97E5CD00A0EF3C /* TimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineView.swift; sourceTree = "<group>"; };
+		B1302D1D2C97E65800A0EF3C /* TipRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipRowView.swift; sourceTree = "<group>"; };
+		B1302D1F2C97E68200A0EF3C /* TipDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipDetailView.swift; sourceTree = "<group>"; };
+		B1302D212C97E96200A0EF3C /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		B1302D232C9884E800A0EF3C /* TripCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCardView.swift; sourceTree = "<group>"; };
+		B1302D252C988D2C00A0EF3C /* WelcomeModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeModalView.swift; sourceTree = "<group>"; };
+		B1302D2B2C9957EC00A0EF3C /* UserTipRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTipRowView.swift; sourceTree = "<group>"; };
 		B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserProfile.swift; sourceTree = "<group>"; };
 		B13AF7662C2D0A91002CAEB3 /* UserProfile2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile2.swift; sourceTree = "<group>"; };
 		B13AF7682C2D0AAD002CAEB3 /* UserProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileModel.swift; sourceTree = "<group>"; };
@@ -102,6 +128,13 @@
 		B15660782C17EE8500EC1A4A /* AuthenScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenScreen.swift; sourceTree = "<group>"; };
 		B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		B171DD572C76194800CAF1B2 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		B1A8FC472C9CA0D7001C5976 /* AdMobManeger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobManeger.swift; sourceTree = "<group>"; };
+		B1BB67662C9A9F0700A8ABCB /* NaitiveAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaitiveAdView.swift; sourceTree = "<group>"; };
+		B1C65F922C929F3D001E237A /* TripCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCard.swift; sourceTree = "<group>"; };
+		B1C65F942C92AAC8001E237A /* AddEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditorView.swift; sourceTree = "<group>"; };
+		B1C65F982C9551FF001E237A /* UserReviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReviewModel.swift; sourceTree = "<group>"; };
+		B1C65F9B2C95538C001E237A /* AddReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReviewView.swift; sourceTree = "<group>"; };
+		B1C876882C99C6DC00C9E865 /* BannerAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdView.swift; sourceTree = "<group>"; };
 		B1D4B3452C82E75800D278D9 /* NotificationManeger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManeger.swift; sourceTree = "<group>"; };
 		B1D4B3472C833FC100D278D9 /* TraveLink.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TraveLink.entitlements; sourceTree = "<group>"; };
 		B1D4B3482C833FD600D278D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -139,6 +172,7 @@
 				B156606B2C1608DE00EC1A4A /* FirebaseStorage in Frameworks */,
 				B156604F2C1608DE00EC1A4A /* FirebaseDynamicLinks in Frameworks */,
 				B156606F2C1608DE00EC1A4A /* FirebaseVertexAI-Preview in Frameworks */,
+				B1C8768C2C99C7AC00C9E865 /* GoogleMobileAds in Frameworks */,
 				B15660532C1608DE00EC1A4A /* FirebaseFirestoreCombine-Community in Frameworks */,
 				B15660632C1608DE00EC1A4A /* FirebaseMessaging in Frameworks */,
 				B156605F2C1608DE00EC1A4A /* FirebaseInstallations in Frameworks */,
@@ -148,6 +182,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1CE704357220995B6AEF74FA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		B11642282C188A2100190599 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,6 +204,8 @@
 			children = (
 				B15660312C10B07E00EC1A4A /* HomeScreen.swift */,
 				B15660352C15FF8A00EC1A4A /* HomeTabScreen.swift */,
+				B1302D232C9884E800A0EF3C /* TripCardView.swift */,
+				B1302D252C988D2C00A0EF3C /* WelcomeModalView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -199,6 +242,7 @@
 				B13AF7682C2D0AAD002CAEB3 /* UserProfileModel.swift */,
 				B13AF76B2C2D0F53002CAEB3 /* UserMapView.swift */,
 				B1079DBB2C76F17F007B1F2C /* SettingView.swift */,
+				B1302D2B2C9957EC00A0EF3C /* UserTipRowView.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -210,8 +254,23 @@
 				B123583B2C440A4800F087AC /* TravelViewModel.swift */,
 				B123583D2C45673600F087AC /* TravelActivityView.swift */,
 				B13BBAB72C71B25D00EAB85C /* PlanEditView.swift */,
+				B1C65F922C929F3D001E237A /* TripCard.swift */,
+				B1C65F942C92AAC8001E237A /* AddEditorView.swift */,
 			);
 			path = TravelPlan;
+			sourceTree = "<group>";
+		};
+		B1302D162C97364B00A0EF3C /* ShareTips */ = {
+			isa = PBXGroup;
+			children = (
+				B1302D172C97370500A0EF3C /* TravelTipViewModel.swift */,
+				B1302D192C97377B00A0EF3C /* CreateTipsView.swift */,
+				B1302D1B2C97E5CD00A0EF3C /* TimeLineView.swift */,
+				B1302D1D2C97E65800A0EF3C /* TipRowView.swift */,
+				B1302D1F2C97E68200A0EF3C /* TipDetailView.swift */,
+				B1302D212C97E96200A0EF3C /* CommentViewModel.swift */,
+			);
+			path = ShareTips;
 			sourceTree = "<group>";
 		};
 		B13AF76A2C2D0C58002CAEB3 /* Non use */ = {
@@ -227,6 +286,7 @@
 				B15660222C10AAC100EC1A4A /* TraveLink */,
 				B15660212C10AAC100EC1A4A /* Products */,
 				B1FE2BAA2C876217007CC2A4 /* Frameworks */,
+				1CE704357220995B6AEF74FA /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -258,6 +318,9 @@
 		B15660292C10AAC800EC1A4A /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				B1BB67652C9A9E7800A8ABCB /* AdMob */,
+				B1302D162C97364B00A0EF3C /* ShareTips */,
+				B1C65F9A2C95535E001E237A /* Review */,
 				B12358382C43E7B500F087AC /* TravelPlan */,
 				B13AF76A2C2D0C58002CAEB3 /* Non use */,
 				B11642382C1C35CE00190599 /* User */,
@@ -268,6 +331,25 @@
 				B156602A2C10AAC800EC1A4A /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B1BB67652C9A9E7800A8ABCB /* AdMob */ = {
+			isa = PBXGroup;
+			children = (
+				B1A8FC472C9CA0D7001C5976 /* AdMobManeger.swift */,
+				B1BB67662C9A9F0700A8ABCB /* NaitiveAdView.swift */,
+				B1C876882C99C6DC00C9E865 /* BannerAdView.swift */,
+			);
+			path = AdMob;
+			sourceTree = "<group>";
+		};
+		B1C65F9A2C95535E001E237A /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				B1C65F982C9551FF001E237A /* UserReviewModel.swift */,
+				B1C65F9B2C95538C001E237A /* AddReviewView.swift */,
+			);
+			path = Review;
 			sourceTree = "<group>";
 		};
 		B1FE2BAA2C876217007CC2A4 /* Frameworks */ = {
@@ -323,6 +405,7 @@
 				B156606A2C1608DE00EC1A4A /* FirebaseStorage */,
 				B156606C2C1608DE00EC1A4A /* FirebaseStorageCombine-Community */,
 				B156606E2C1608DE00EC1A4A /* FirebaseVertexAI-Preview */,
+				B1C8768B2C99C7AC00C9E865 /* GoogleMobileAds */,
 			);
 			productName = Projissen_last;
 			productReference = B15660202C10AAC100EC1A4A /* TraveLink.app */;
@@ -354,6 +437,7 @@
 			mainGroup = B15660172C10AAC100EC1A4A;
 			packageReferences = (
 				B15660372C1608DD00EC1A4A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B1C8768A2C99C7AC00C9E865 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = B15660212C10AAC100EC1A4A /* Products */;
 			projectDirPath = "";
@@ -383,32 +467,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1302D1A2C97377B00A0EF3C /* CreateTipsView.swift in Sources */,
 				B123583C2C440A4800F087AC /* TravelViewModel.swift in Sources */,
 				B11642332C19383B00190599 /* SearchCountryList.swift in Sources */,
+				B1C65F992C9551FF001E237A /* UserReviewModel.swift in Sources */,
 				B1D4B3462C82E75800D278D9 /* NotificationManeger.swift in Sources */,
 				B15660362C15FF8A00EC1A4A /* HomeTabScreen.swift in Sources */,
 				B13AF7672C2D0A91002CAEB3 /* UserProfile2.swift in Sources */,
+				B1302D1E2C97E65800A0EF3C /* TipRowView.swift in Sources */,
+				B1A8FC482C9CA0E0001C5976 /* AdMobManeger.swift in Sources */,
+				B1302D262C988D2C00A0EF3C /* WelcomeModalView.swift in Sources */,
 				B13BBABB2C72F17100EAB85C /* MyAppCheckProviderFactory.swift in Sources */,
 				B13AF7692C2D0AAD002CAEB3 /* UserProfileModel.swift in Sources */,
+				B1C65F952C92AAC8001E237A /* AddEditorView.swift in Sources */,
 				B116422C2C188ADA00190599 /* ChatViewModel.swift in Sources */,
+				B1C876892C99C6F300C9E865 /* BannerAdView.swift in Sources */,
 				B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */,
 				B13AF76C2C2D0F53002CAEB3 /* UserMapView.swift in Sources */,
+				B1BB67672C9A9F4A00A8ABCB /* NaitiveAdView.swift in Sources */,
 				B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */,
 				B13BBAB82C71B25D00EAB85C /* PlanEditView.swift in Sources */,
 				B116422E2C188B2D00190599 /* ChatView.swift in Sources */,
 				B13AF7652C2A9A44002CAEB3 /* CurrentUserProfile.swift in Sources */,
 				B11642312C19336000190599 /* CountryView.swift in Sources */,
 				B123583A2C43E7DF00F087AC /* TravelPlanView.swift in Sources */,
+				B1C65F9C2C95538C001E237A /* AddReviewView.swift in Sources */,
 				B15660242C10AAC100EC1A4A /* TraveLink.swift in Sources */,
 				B123583E2C45673600F087AC /* TravelActivityView.swift in Sources */,
 				B15660342C1156A000EC1A4A /* NationScreen.swift in Sources */,
+				B1302D222C97E96200A0EF3C /* CommentViewModel.swift in Sources */,
+				B1302D242C9884E800A0EF3C /* TripCardView.swift in Sources */,
+				B1302D2C2C9957EC00A0EF3C /* UserTipRowView.swift in Sources */,
 				B116BC642C1C43730061F8EE /* ChatCreate.swift in Sources */,
 				B15660322C10B07E00EC1A4A /* HomeScreen.swift in Sources */,
+				B1302D1C2C97E5CD00A0EF3C /* TimeLineView.swift in Sources */,
 				B11642352C1BDBB200190599 /* UserListView.swift in Sources */,
 				B1079DBC2C76F17F007B1F2C /* SettingView.swift in Sources */,
+				B1302D202C97E68200A0EF3C /* TipDetailView.swift in Sources */,
+				B1302D182C97370600A0EF3C /* TravelTipViewModel.swift in Sources */,
 				B11642372C1C357700190599 /* UserFetch.swift in Sources */,
 				B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */,
 				B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */,
+				B1C65F932C929F3D001E237A /* TripCard.swift in Sources */,
 				B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -540,6 +640,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				BANNER_ID = "ca-app-pub-3940256099942544/2934735716";
 				CODE_SIGN_ENTITLEMENTS = TraveLink/TraveLinkDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -547,6 +648,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TraveLink/Preview Content\"";
 				DEVELOPMENT_TEAM = DBQLS32MZV;
 				ENABLE_PREVIEWS = YES;
+				GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TraveLink/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TraveLink;
@@ -563,7 +665,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Kensei.TraveLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -577,12 +680,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				BANNER_ID = "ca-app-pub-3940256099942544/2934735716";
 				CODE_SIGN_ENTITLEMENTS = TraveLink/TraveLink.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TraveLink/Preview Content\"";
 				DEVELOPMENT_TEAM = DBQLS32MZV;
 				ENABLE_PREVIEWS = YES;
+				GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TraveLink/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TraveLink;
@@ -599,7 +704,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Kensei.TraveLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -638,6 +743,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 10.27.0;
+			};
+		};
+		B1C8768A2C99C7AC00C9E865 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.9.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -782,6 +895,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B15660372C1608DD00EC1A4A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseVertexAI-Preview";
+		};
+		B1C8768B2C99C7AC00C9E865 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B1C8768A2C99C7AC00C9E865 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

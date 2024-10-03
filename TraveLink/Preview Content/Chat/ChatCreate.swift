@@ -7,7 +7,6 @@
 import Firebase
 import SwiftUI
 
-import Firebase
 
 class ChatCreate {
     private let db = Firestore.firestore()
@@ -46,7 +45,8 @@ class ChatCreate {
     private func createNewChat(userIds: [String], completion: @escaping (String?) -> Void) {
         let chatData: [String: Any] = [
             "participants": userIds,
-            "createdAt": Timestamp()
+            "createdAt": Timestamp(),
+            //"messages": ""
         ]
         var ref: DocumentReference? = nil
         ref = db.collection("chats").addDocument(data: chatData) { error in
@@ -57,6 +57,7 @@ class ChatCreate {
                 completion(ref?.documentID)
             }
         }
+        
     }
 }
 

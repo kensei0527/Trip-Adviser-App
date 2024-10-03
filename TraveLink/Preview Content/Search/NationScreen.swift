@@ -11,17 +11,11 @@ import FirebaseAuth
 struct NationScreen: View {
     let countryname: String
     @StateObject private var viewModel: NationScreenModel
-    //@StateObject private var userFetchModel = UserFetchModel()
-    
-    
     
     init(countryName: String) {
         self.countryname = countryName
         self._viewModel = StateObject(wrappedValue: NationScreenModel(countryName: countryName))
-        //viewModel.fetchUsers()
     }
-    
-    
     
     var body: some View {
         NavigationView{
@@ -29,7 +23,7 @@ struct NationScreen: View {
                 Text(viewModel.countryName)
                     .font(.headline)
                 
-                ForEach(viewModel.matchingDocumentIDs, id: \.self) { matchUser in
+                ForEach(Array(viewModel.matchingDocumentIDs.enumerated()), id: \.element) { index, matchUser in
                     if let user = viewModel.users[matchUser] {
                         NavigationLink(destination: UserProfileVieww(user: user)) {
                             HStack {
@@ -53,8 +47,14 @@ struct NationScreen: View {
                     } else {
                         ProgressView()
                             .onAppear{
-                                viewModel.fetchUsers() //下のonAppearがviewModelのinitより先に反応するためelseに落ちてからもう一度取得
+                                viewModel.fetchUsers()
                             }
+                    }
+                    
+                    // 5つごとに広告を挿入
+                    if index % 5 == 4 {
+                        AdMobBannerView()
+                            .frame(width: 100, height: 50)
                     }
                 }
             }

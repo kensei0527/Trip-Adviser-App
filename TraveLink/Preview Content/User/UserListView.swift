@@ -8,6 +8,8 @@
 
 import SwiftUI
 import FirebaseAuth
+import GoogleMobileAds
+
 
 struct UserListView: View {
     @ObservedObject private var viewModel = UserFetchModel()
@@ -45,9 +47,16 @@ struct UserListView: View {
                     
                     // Users list
                     LazyVStack(spacing: 15) {
-                        ForEach(filteredUsers) { user in
+                        ForEach(Array(filteredUsers.enumerated()), id: \.element.id) { index, user in
                             NavigationLink(destination: UserProfileVieww(user: user).environmentObject(followRequestViewModel)) {
                                 UserCard(user: user)
+                            }
+                            
+                            // 広告を挿入（例：3つごとに）
+                            if index % 5 == 4 {
+                                AdMobBannerView()
+                                    .frame(height: 50)
+                                    .padding(.vertical)
                             }
                         }
                     }
@@ -149,12 +158,12 @@ struct UserCard: View {
             AsyncImage(url: user.profileImageURL) { phase in
                 switch phase {
                 case .empty:
-                    ProgressView()
-                    /*Image(systemName: "person.circle.fill")
+                    //ProgressView()
+                    Image(systemName: "person.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 60, height: 60)
-                        .foregroundColor(.gray)*/
+                        .foregroundColor(.gray)
                 case .success(let image):
                     image
                         .resizable()
@@ -176,9 +185,9 @@ struct UserCard: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(user.name)
                     .font(.headline)
-                Text(user.email)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                //Text(user.email)
+                  //  .font(.subheadline)
+                    //.foregroundColor(.gray)
             }
             
             Spacer()

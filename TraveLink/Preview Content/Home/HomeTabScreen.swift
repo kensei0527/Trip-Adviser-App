@@ -14,10 +14,12 @@ struct HomeTabScreen: View {
     @StateObject var followRequestViewModel = FollowRequestViewModel()
     @StateObject private var countryViewModel = CountryViewModel()
     @StateObject private var userFetchModel = UserFetchModel()
+    @StateObject private var tripViewModel = TripViewModel()
     @State private var userName: String = "User name"
     @State private var profileImage: Image?
     @State private var isLoading: Bool = true
     @State private var currentUserEmail: String?
+    
     
     private var db = Firestore.firestore()
     private let storage = Storage.storage().reference()
@@ -49,7 +51,7 @@ struct HomeTabScreen: View {
                         .fontWeight(.bold)
                     
                     // Your Research section
-                    sectionHeader(title: "Your Research")
+                    sectionHeader(title: "Discover new adviser or traveler!")
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 15) {
                             ForEach(countryViewModel.countries, id: \.self) { country in
@@ -63,7 +65,7 @@ struct HomeTabScreen: View {
                     }
                     
                     // Your Traveler section
-                    sectionHeader(title: "Your Travelers")
+                    sectionHeader(title: "Your Followers ")
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 15) {
                             ForEach(userFetchModel.users.filter { userFetchModel.followers.contains($0.email) }) { follower in
@@ -74,15 +76,36 @@ struct HomeTabScreen: View {
                         }
                         .padding(.horizontal)
                     }
+                    
+                    sectionHeader(title: "Your Trips")
+                    if tripViewModel.trips.isEmpty {
+                        Text("No travel plans yet.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack(spacing: 15) {
+                                ForEach(tripViewModel.trips) { trip in
+                                    NavigationLink(destination: TripDetailView(viewModel: tripViewModel, userList: userFetchModel.useredFollowers,trip: trip)) {
+                                        TripCard(trip: trip)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
                 }
             }
             .navigationBarHidden(true)
             .background(Color.gray.opacity(0.1).ignoresSafeArea())
+            
         }
         .onAppear {
             fetchUserData()
             userFetchModel.fetchUsers()
-            //userFetchModel.fetchFollowUser()
+            tripViewModel.fetchTrips()
             self.currentUserEmail = Auth.auth().currentUser?.email
             
         }

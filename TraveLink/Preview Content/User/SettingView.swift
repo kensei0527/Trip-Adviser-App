@@ -12,24 +12,73 @@ import FirebaseFirestore
 struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showingDeleteAccountAlert = false
+    @State private var username = ""
+    @State private var showingChangeUsernameAlert = false
+    @State private var newUsername = ""
+    @State private var showingPrivacyPolicy = false
+    @State private var showingTermsOfUse = false
+    @State private var showWelcomeModal: Bool = false
+    
     
     var body: some View {
         NavigationView {
             List {
-                Button(action: signOut) {
-                    Label("Sign Out", systemImage: "arrow.right.square")
+                Section(header: Text("Account")) {
+                    Text("Username: \(username)")
+                    Button(action: { showingChangeUsernameAlert = true }) {
+                        Label("Change Username", systemImage: "pencil")
+                    }
                 }
-                .foregroundColor(.red)
                 
-                Button(action: { showingDeleteAccountAlert = true }) {
-                    Label("Delete Account", systemImage: "trash")
+                Section(header: Text("Actions")) {
+                    Button("Show Welcome Message") {
+                        showWelcomeModal = true
+                    }
+                    .sheet(isPresented: $showWelcomeModal) {
+                        OnboardingView(isFirstLaunch: $showWelcomeModal)
+                    }
+                    Button(action: {
+                        showingPrivacyPolicy = true
+                    }, label: {
+                        Label("Privacy Policy", systemImage: "person.badge.shield.checkmark")
+                    })
+                    .sheet(isPresented: $showingPrivacyPolicy, content: {
+                        SafariView(url: URL(string: "https://kensei0527.github.io/TraveLink_web/")!)
+                    })
+                    Button(action: {
+                        showingTermsOfUse = true
+                    }, label: {
+                        Label("Terms Of Use", systemImage: "pencil.line")
+                    })
+                    .sheet(isPresented: $showingTermsOfUse, content: {
+                        SafariView(url: URL(string: "https://kensei0527.github.io/TraveLink_term/")!)
+                    })
+                    
+                    Button(action: signOut) {
+                        Label("Sign Out", systemImage: "arrow.right.square")
+                    }
+                    .foregroundColor(.red)
+                    
+                    Button(action: { showingDeleteAccountAlert = true }) {
+                        Label("Delete Account", systemImage: "trash")
+                    }
+                    .foregroundColor(.red)
                 }
-                .foregroundColor(.red)
             }
             .navigationTitle("Settings")
             .navigationBarItems(leading: Button("Close") {
                 presentationMode.wrappedValue.dismiss()
             })
+        }
+        .onAppear(perform: loadUsername)
+        .alert("Change Username", isPresented: $showingChangeUsernameAlert) {
+            TextField("New username", text: $newUsername)
+            Button("Cancel", role: .cancel) { }
+            Button("Change") {
+                changeUsername()
+            }
+        } message: {
+            Text("Enter your new username")
         }
         .alert(isPresented: $showingDeleteAccountAlert) {
             Alert(
@@ -40,6 +89,29 @@ struct SettingsView: View {
                 },
                 secondaryButton: .cancel()
             )
+        }
+    }
+    
+    func loadUsername() {
+        guard let userEmail = Auth.auth().currentUser?.email else { return }
+        let db = Firestore.firestore()
+        db.collection("users").document(userEmail).getDocument { (document, error) in
+            if let document = document, document.exists {
+                self.username = document.data()?["name"] as? String ?? ""
+            }
+        }
+    }
+    
+    func changeUsername() {
+        guard let userEmail = Auth.auth().currentUser?.email else { return }
+        let db = Firestore.firestore()
+        db.collection("users").document(userEmail).updateData(["name": newUsername]) { error in
+            if let error = error {
+                print("Error updating username: \(error.localizedDescription)")
+            } else {
+                self.username = newUsername
+                self.newUsername = ""
+            }
         }
     }
     
