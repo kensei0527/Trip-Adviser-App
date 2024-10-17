@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import StoreKit
 
 struct TripDetailView: View {
     @ObservedObject var viewModel: TripViewModel
@@ -22,20 +23,48 @@ struct TripDetailView: View {
     @State private var selectedActivity: Activity?
     @State private var isTripCompleted = false
     @State private var newEditors: [String: UserRole] = [:]
+    let tripCompletionCountKey = "tripCompletionCount"
+    let lastReviewRequestDateKey = "lastReviewRequestDate"
     
     @Environment(\.presentationMode) var presentationMode
     
+    // レビューリクエスト関数を追加
+    func requestAppReview() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: windowScene)
+        }
+    }
     
-    func sectionFor() -> some View{
+    func incrementTripCompletionCount() {
+        let currentCount = UserDefaults.standard.integer(forKey: tripCompletionCountKey)
+        UserDefaults.standard.set(currentCount + 1, forKey: tripCompletionCountKey)
+    }
+    
+    func considerRequestingReview() {
+        let currentCount = UserDefaults.standard.integer(forKey: tripCompletionCountKey)
+        let lastReviewDate = UserDefaults.standard.object(forKey: lastReviewRequestDateKey) as? Date ?? Date.distantPast
+        let daysSinceLastReview = Calendar.current.dateComponents([.day], from: lastReviewDate, to: Date()).day ?? 0
+        
+        if currentCount % 3 == 0 && daysSinceLastReview >= 15 {
+            requestAppReview()
+            UserDefaults.standard.set(Date(), forKey: lastReviewRequestDateKey)
+        }
+    }
+    
+    
+    func sectionFor() -> some View {
         ForEach(groupedActivities, id: \.0) { date, activities in
+            // アクティビティは既に降順にソートされているので、そのまま使用
+            let sortedActivities = activities
+            
             Section(header: Text(formatDate(date))) {
-                ForEach(activities) { activity in
-                    TimelineItemView(activity: activity, isLastActivity: activity == activities.last) {
+                ForEach(sortedActivities) { activity in
+                    TimelineItemView(activity: activity, isLastActivity: activity == sortedActivities.last) {
                         selectedActivity = activity
                     }
                 }
                 .onDelete { indexSet in
-                    deleteActivities(at: indexSet, for: date)
+                    deleteActivities(at: indexSet, activities: sortedActivities)
                 }
             }
         }
@@ -65,15 +94,19 @@ struct TripDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Button(action: {
-                        if(isTripCompleted == false){
-                            sharedReviewState.isReviewNeeded = true
-                        }
-                        toggleTripCompletion()
-                        if(trip.advisors != nil){
+                        if(trip.advisors != []){
                             self.reviewedUser = trip.advisors[0]
-                        }else{
+                            if(isTripCompleted == false && self.reviewedUser != Auth.auth().currentUser?.email){
+                                sharedReviewState.isReviewNeeded = true
+                            }
+                        }
+                        else{
                             sharedReviewState.isReviewNeeded = false
                         }
+                        
+                        toggleTripCompletion()
+                        
+                        
                     }) {
                         Text(isTripCompleted ? "Reopen Trip" : "Complete Trip")
                     }
@@ -98,10 +131,12 @@ struct TripDetailView: View {
                 get: { sharedReviewState.isReviewNeeded },
                 set: { if !$0 { sharedReviewState.isReviewNeeded = false } }
             )) {
-                if(reviewedUser == ""){
-                    AddReviewView(targetUserId: reviewedUser,
-                                  currentUserId: (Auth.auth().currentUser?.email)! as String,
-                                  sharedReviewState: sharedReviewState)
+                if(reviewedUser != ""){
+                        AddReviewView(targetUserId: reviewedUser,
+                                      currentUserId: (Auth.auth().currentUser?.email) ?? "" as String,
+                                      sharedReviewState: sharedReviewState)
+                }else{
+                    ProgressView()
                 }
             }
             .onAppear {
@@ -109,7 +144,9 @@ struct TripDetailView: View {
                 viewModel.fetchTripCompletionStatus(for: trip) { status in
                     isTripCompleted = status
                 }
-                reviewedUser = trip.advisors[0]
+                if(trip.advisors != []){
+                    reviewedUser = trip.advisors[0]
+                }
             }
             .onChange(of: showingAddEditor) { isPresented in
                 if !isPresented && !newEditors.isEmpty {
@@ -133,7 +170,14 @@ struct TripDetailView: View {
         let grouped = Dictionary(grouping: trip.activities) { activity in
             Calendar.current.startOfDay(for: activity.startTime)
         }
-        return grouped.sorted { $0.key < $1.key }
+        
+        // アクティビティを開始時刻の降順にソート
+        let sortedGrouped = grouped.mapValues { activities in
+            activities.sorted { $0.startTime > $1.startTime }
+        }
+        
+        // 日付を降順にソート（新しい日付が下に来る）
+        return sortedGrouped.sorted { $0.key > $1.key }
     }
     
     private func formatDate(_ date: Date) -> String {
@@ -143,10 +187,17 @@ struct TripDetailView: View {
         return formatter.string(from: date)
     }
     
-    private func deleteActivities(at offsets: IndexSet, for date: Date) {
+    /*private func deleteActivities(at offsets: IndexSet, for date: Date) {
         let activitiesForDate = groupedActivities.first { $0.0 == date }?.1 ?? []
         offsets.forEach { index in
             let activity = activitiesForDate[index]
+            viewModel.deleteActivity(activity, from: trip)
+        }
+    }*/
+    
+    private func deleteActivities(at offsets: IndexSet, activities: [Activity]) {
+        offsets.forEach { index in
+            let activity = activities[index]
             viewModel.deleteActivity(activity, from: trip)
         }
     }
@@ -158,7 +209,8 @@ struct TripDetailView: View {
             case .success:
                 print("Trip completion status updated successfully")
                 if isTripCompleted {
-                    sharedReviewState.isReviewNeeded = true
+                    incrementTripCompletionCount()
+                    considerRequestingReview()
                 }
             case .failure(let error):
                 print("Failed to update trip completion status: \(error.localizedDescription)")

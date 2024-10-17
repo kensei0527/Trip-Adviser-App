@@ -73,6 +73,8 @@
 		B15660712C160A9000EC1A4A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B15660702C160A9000EC1A4A /* GoogleService-Info.plist */; };
 		B15660792C17EE8500EC1A4A /* AuthenScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15660782C17EE8500EC1A4A /* AuthenScreen.swift */; };
 		B156607B2C17F35F00EC1A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */; };
+		B16213172CAD732F00D3957C /* ProfileCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16213162CAD731A00D3957C /* ProfileCompletion.swift */; };
+		B16213192CB1950600D3957C /* CurrentUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16213182CB194F700D3957C /* CurrentUserModel.swift */; };
 		B171DD582C76194800CAF1B2 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B171DD572C76194800CAF1B2 /* SignupView.swift */; };
 		B1A8FC482C9CA0E0001C5976 /* AdMobManeger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A8FC472C9CA0D7001C5976 /* AdMobManeger.swift */; };
 		B1BB67672C9A9F4A00A8ABCB /* NaitiveAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BB67662C9A9F0700A8ABCB /* NaitiveAdView.swift */; };
@@ -127,6 +129,8 @@
 		B15660702C160A9000EC1A4A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B15660782C17EE8500EC1A4A /* AuthenScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenScreen.swift; sourceTree = "<group>"; };
 		B156607A2C17F35F00EC1A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		B16213162CAD731A00D3957C /* ProfileCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCompletion.swift; sourceTree = "<group>"; };
+		B16213182CB194F700D3957C /* CurrentUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserModel.swift; sourceTree = "<group>"; };
 		B171DD572C76194800CAF1B2 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		B1A8FC472C9CA0D7001C5976 /* AdMobManeger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobManeger.swift; sourceTree = "<group>"; };
 		B1BB67662C9A9F0700A8ABCB /* NaitiveAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaitiveAdView.swift; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 		B11642292C188A9700190599 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				B16213162CAD731A00D3957C /* ProfileCompletion.swift */,
 				B15660312C10B07E00EC1A4A /* HomeScreen.swift */,
 				B15660352C15FF8A00EC1A4A /* HomeTabScreen.swift */,
 				B1302D232C9884E800A0EF3C /* TripCardView.swift */,
@@ -234,6 +239,7 @@
 		B11642382C1C35CE00190599 /* User */ = {
 			isa = PBXGroup;
 			children = (
+				B16213182CB194F700D3957C /* CurrentUserModel.swift */,
 				B11642362C1C357700190599 /* UserFetch.swift */,
 				B11642342C1BDBB100190599 /* UserListView.swift */,
 				B13AF7642C2A9A44002CAEB3 /* CurrentUserProfile.swift */,
@@ -504,8 +510,10 @@
 				B11642352C1BDBB200190599 /* UserListView.swift in Sources */,
 				B1079DBC2C76F17F007B1F2C /* SettingView.swift in Sources */,
 				B1302D202C97E68200A0EF3C /* TipDetailView.swift in Sources */,
+				B16213172CAD732F00D3957C /* ProfileCompletion.swift in Sources */,
 				B1302D182C97370600A0EF3C /* TravelTipViewModel.swift in Sources */,
 				B11642372C1C357700190599 /* UserFetch.swift in Sources */,
+				B16213192CB1950600D3957C /* CurrentUserModel.swift in Sources */,
 				B13AF76E2C343D60002CAEB3 /* NationScreenModel.swift in Sources */,
 				B12E29562C29AF67005E2BA8 /* FollowRquestModel.swift in Sources */,
 				B1C65F932C929F3D001E237A /* TripCard.swift in Sources */,
@@ -665,7 +673,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Kensei.TraveLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -704,7 +712,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Kensei.TraveLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

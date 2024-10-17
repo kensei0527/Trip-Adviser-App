@@ -22,6 +22,7 @@ struct UserProfileVieww: View {
     @State private var showingReportAlert = false
     @State private var showingBlockAlert = false
     @State private var isChatting = false
+    @State private var showingFollowersList = false
     
     init(user: User) {
         _viewModel = StateObject(wrappedValue: UserProfileViewModel(user: user))
@@ -110,6 +111,12 @@ struct UserProfileVieww: View {
                     secondaryButton: .cancel()
                 )
             }
+            .navigationDestination(isPresented: $showingFollowersList) {
+                FollowersListView(followers: viewModel.followers)
+            }
+            .navigationDestination(isPresented: $isChatting) {
+                ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
+            }
         }
     }
     
@@ -133,6 +140,34 @@ struct UserProfileVieww: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.top, 8)
+            
+            HStack(spacing: 40) {
+                VStack {
+                    Text("\(viewModel.posts.count)")
+                        .font(.headline)
+                    Text("Posts")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Divider()
+                    .frame(height: 40)
+                
+                Button(action: {
+                    showingFollowersList = true
+                }) {
+                    VStack {
+                        Text("\(viewModel.followers.count)")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        Text("Followers")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .padding(.top, 8)
         }
     }
     
@@ -203,6 +238,7 @@ struct UserProfileVieww: View {
             Text("Follow each other to chat!")
                 .font(.headline)
                 .padding()
+            
             Button(action: viewModel.toggleFollow) {
                 Text(viewModel.isFollowing ? "Unfollow" : "Follow")
                     .fontWeight(.semibold)
@@ -213,29 +249,12 @@ struct UserProfileVieww: View {
                     .cornerRadius(12)
             }
             
-            /*Button(action: viewModel.createAndStartChat) {
-                Text("Chat")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(viewModel.isFollowing ? Color.green : Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-            }
-            .disabled(!viewModel.isFollowing)
-            .navigationDestination(isPresented: $isChatting){
-                ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
-            }*/
-            
             Button(action:{
                 viewModel.getChatDocumentId(withUser: viewModel.user.email){ chatId in
                     viewModel.chatId = chatId
-                    print(viewModel.chatId)
                     viewModel.createAndStartChat()
                     isChatting = true
                 }
-                
-                print(viewModel.chatId)
             }) {
                 Text("Chat")
                     .fontWeight(.semibold)
@@ -246,19 +265,10 @@ struct UserProfileVieww: View {
                     .cornerRadius(12)
             }
             .disabled(!viewModel.isFollowing)
-            .navigationDestination(isPresented: $isChatting){
-                ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
-            }
-            
-            /*NavigationLink(destination: ChatView(chatId: viewModel.chatId ?? "", userName: viewModel.user.name)
-                .environmentObject(authViewModel),
-                           isActive: Binding(
-                            get: { viewModel.chatId != nil },
-                            set: { if !$0 { viewModel.chatId = nil } }
-                           )) {
-                               EmptyView()
-                           }*/
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
     }
     
     private var postsSection: some View {
@@ -318,5 +328,33 @@ struct PostGridItem: View {
                     .padding(4)
             }
         }
+    }
+}
+
+struct FollowersListView: View {
+    var followers: [User]
+    
+    var body: some View {
+        List(followers) { follower in
+            NavigationLink(destination: UserProfileVieww(user: follower)) {
+                HStack {
+                    // Optionally display follower's profile image
+                    AsyncImage(url: follower.profileImageURL) { image in
+                     image.resizable()
+                     .aspectRatio(contentMode: .fill)
+                     } placeholder: {
+                     Image(systemName: "person.circle.fill")
+                     .resizable()
+                     .foregroundColor(.gray)
+                     }
+                     .frame(width: 40, height: 40)
+                     .clipShape(Circle())
+                    
+                    Text(follower.name)
+                        .font(.body)
+                }
+            }
+        }
+        .navigationTitle("Followers")
     }
 }

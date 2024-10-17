@@ -19,6 +19,9 @@ struct HomeTabScreen: View {
     @State private var profileImage: Image?
     @State private var isLoading: Bool = true
     @State private var currentUserEmail: String?
+    @State private var isProfileImageMissing: Bool = false
+    @State private var isLocationMissing: Bool = false
+    @State private var userLocation: String?
     
     
     private var db = Firestore.firestore()
@@ -49,6 +52,12 @@ struct HomeTabScreen: View {
                     Text("Welcome, \(userName)!")
                         .font(.title2)
                         .fontWeight(.bold)
+                    
+                    // プロフィール未完成の場合の吹き出し
+                    if isProfileImageMissing || isLocationMissing {
+                        ProfileCompletionPrompt(isProfileImageMissing: isProfileImageMissing, isLocationMissing: isLocationMissing)
+                            .padding(.horizontal)
+                    }
                     
                     // Your Research section
                     sectionHeader(title: "Discover new adviser or traveler!")
@@ -148,30 +157,42 @@ struct HomeTabScreen: View {
             return
         }
         
-        db.collection("users").whereField("email", isEqualTo: user.email ?? "")
-            .getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                    isLoading = false
-                    return
-                }
-                
-                guard let document = querySnapshot?.documents.first else {
-                    print("No matching document")
-                    isLoading = false
-                    return
-                }
-                
-                if let name = document.data()["name"] as? String {
-                    self.userName = name
-                    print(userName)
-                }
-                if let profileImageURL = document.data()["profileImageURL"] as? String {
-                    self.loadProfileImage(from: profileImageURL)
-                }
-                
+        db.collection("users").document(user.email ?? "").getDocument { (document, error) in
+            if let error = error {
+                print("Error getting document: \(error)")
                 isLoading = false
+                return
             }
+            
+            guard let document = document, document.exists else {
+                print("No matching document")
+                isLoading = false
+                return
+            }
+            
+            let data = document.data() ?? [:]
+            
+            if let name = data["name"] as? String {
+                self.userName = name
+                print(userName)
+            }
+            
+            if let profileImageURL = data["profileImageURL"] as? String, !profileImageURL.isEmpty {
+                self.loadProfileImage(from: profileImageURL)
+                self.isProfileImageMissing = false
+            } else {
+                self.isProfileImageMissing = true
+            }
+            
+            if let location = data["location"] as? String, !location.isEmpty {
+                self.userLocation = location
+                self.isLocationMissing = false
+            } else {
+                self.isLocationMissing = true
+            }
+            
+            isLoading = false
+        }
     }
     
     func loadProfileImage(from urlString: String) {

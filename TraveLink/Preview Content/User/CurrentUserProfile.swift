@@ -6,54 +6,33 @@
 //
 
 import SwiftUI
-import FirebaseAuth
-import FirebaseFirestore
-import FirebaseStorage
 import MapKit
+import Firebase
 
 struct CurrentUserProfileView: View {
-    @StateObject private var userReviewModel = UserReviewViewModel()
-    @StateObject private var tipViewModel = TravelTipViewModel()
-    @State private var currentUserEmail: String = ""
-    @State private var userLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503)  // デフォルトは東京
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 35.6762, longitude: 139.6503), span: MKCoordinateSpan(latitudeDelta: 2, longitudeDelta: 2))
-    @State private var showingLocationPicker = false
-    @State private var countryAddress: String = ""
-    @State private var cityAddress: String = ""
-    @State private var address: String = ""
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
-    @State private var userName: String = ""
-    @State private var isLoading: Bool = true
+    @StateObject private var viewModel = CurrentUserProfileViewModel()
     @State private var showingImagePicker = false
-    @State private var inputImage: UIImage?
-    @State private var profileImage: Image?
-    @State private var introduction: String = ""
-    @State private var isEditingIntroduction: Bool = false
     @State private var showingSettingsView = false
     @State private var showingReviews = false
-    @State private var selectedTip: TravelTip? 
-    @State private var showingDeleteConfirmation = false
+    @State private var showingFollowersList = false
     @Environment(\.dismiss) var dismiss
-    
-    private var db = Firestore.firestore()
-    private let storage = Storage.storage().reference()
-    
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if isLoading {
+                if viewModel.isLoading {
                     ProgressView()
-                        .onAppear {
-                            // 5秒後にisLoadingをfalseに設定する
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                self.isLoading = false
-                            }
-                        }
                 } else {
                     // Profile Header
-                    ProfileHeader(profileImage: profileImage, userName: userName)
+                    ProfileHeader(
+                        profileImage: viewModel.profileImage,
+                        userName: viewModel.userName,
+                        postsCount: viewModel.tipViewModel.tips.count,
+                        followersCount: viewModel.followers.count,
+                        onFollowersTapped: {
+                            showingFollowersList = true
+                        }
+                    )
                     
                     // User Rating
                     userRating
@@ -70,6 +49,10 @@ struct CurrentUserProfileView: View {
                         }
                         .buttonStyle(SecondaryButtonStyle())
                     }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
                     
                     // Introduction Section
                     VStack(alignment: .leading, spacing: 10) {
@@ -78,23 +61,23 @@ struct CurrentUserProfileView: View {
                                 .font(.headline)
                             Spacer()
                             Button(action: {
-                                isEditingIntroduction.toggle()
-                                if !isEditingIntroduction {
-                                    saveIntroduction()
+                                viewModel.isEditingIntroduction.toggle()
+                                if !viewModel.isEditingIntroduction {
+                                    viewModel.saveIntroduction()
                                 }
                             }) {
-                                Text(isEditingIntroduction ? "Save" : "Edit")
+                                Text(viewModel.isEditingIntroduction ? "Save" : "Edit")
                             }
                         }
                         
-                        if isEditingIntroduction {
-                            TextEditor(text: $introduction)
+                        if viewModel.isEditingIntroduction {
+                            TextEditor(text: $viewModel.introduction)
                                 .frame(height: 100)
                                 .padding(4)
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(8)
                         } else {
-                            Text(introduction.isEmpty ? "No introduction yet." : introduction)
+                            Text(viewModel.introduction.isEmpty ? "No introduction yet." : viewModel.introduction)
                                 .foregroundColor(.gray)
                         }
                     }
@@ -110,46 +93,47 @@ struct CurrentUserProfileView: View {
                         
                         HStack {
                             Image(systemName: "mappin.and.ellipse")
-                            Text(address)
+                            Text(viewModel.address)
                         }
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         
-                        MapView(coordinate: $userLocation)
+                        MapView(coordinate: $viewModel.userLocation)
                             .frame(height: 200)
                             .cornerRadius(10)
                         
-                        TextField("Enter your Country", text: $countryAddress)
+                        TextField("Enter your Country", text: $viewModel.countryAddress)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         
-                        TextField("Enter your City", text: $cityAddress)
+                        TextField("Enter your City", text: $viewModel.cityAddress)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         
-                        Button(action: updateLocation) {
+                        Button(action: viewModel.updateLocation) {
                             Label("Update Location", systemImage: "location")
                         }
                         .buttonStyle(PrimaryButtonStyle())
-                        
-                        
                     }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(10)
                     .shadow(radius: 5)
                     
-                    // 投稿一覧を表示
-                    // ユーザーの投稿一覧を表示
+                    // Posts Section
                     VStack(alignment: .leading, spacing: 10) {
                         Text("My Posts")
                             .font(.headline)
                             .padding(.leading)
                         
-                        ForEach(tipViewModel.tips) { tip in
+                        ForEach(viewModel.tipViewModel.tips) { tip in
                             UserTipRow(tip: tip, deleteAction: {
-                                deleteTip(tip)
+                                viewModel.deleteTip(tip)
                             })
                         }
                     }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
                 }
             }
             .padding()
@@ -158,69 +142,58 @@ struct CurrentUserProfileView: View {
         .navigationTitle("My Profile")
         .navigationBarItems(trailing: settingsButton)
         .onAppear {
-            loadUserData()
-            fetchUserData()
-            if let userEmail = Auth.auth().currentUser?.email {
-                userReviewModel.fetchReviews(for: userEmail)
-                currentUserEmail = userEmail
-                tipViewModel.fetchUserTips(userEmail: userEmail) // ユーザーの投稿を取得
-            }
-            userReviewModel.fetchReviews(for: currentUserEmail)
-            print(userReviewModel.averageRating)
+            // Any additional setup if needed
         }
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(""), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        .alert(isPresented: $viewModel.showingAlert) {
+            Alert(title: Text(""), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
         }
-        .alert(isPresented: $showingDeleteConfirmation) {
+        .alert(isPresented: $viewModel.showingDeleteConfirmation) {
             Alert(
                 title: Text("Delete Post"),
                 message: Text("Are you sure you want to delete this post?"),
                 primaryButton: .destructive(Text("Delete")) {
-                    if let tip = selectedTip {
-                        tipViewModel.deleteTip(tip)
+                    if let tip = viewModel.selectedTip {
+                        viewModel.tipViewModel.deleteTip(tip)
                     }
                 },
                 secondaryButton: .cancel()
             )
         }
-        .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
-            ImagePicker(image: $inputImage)
+        .sheet(isPresented: $showingImagePicker, onDismiss: viewModel.loadImage) {
+            ImagePicker(image: $viewModel.inputImage)
         }
         .sheet(isPresented: $showingSettingsView) {
             SettingsView()
         }
         .sheet(isPresented: $showingReviews) {
-            ReviewsListView(reviews: userReviewModel.reviews)
+            ReviewsListView(reviews: viewModel.userReviewModel.reviews)
+        }
+        .navigationDestination(isPresented: $showingFollowersList) {
+            FollowersListView(followers: viewModel.followers)
         }
     }
     
     private var settingsButton: some View {
         Button(action: {
             showingSettingsView = true
-            userReviewModel.fetchReviews(for: currentUserEmail)
+            viewModel.userReviewModel.fetchReviews(for: viewModel.currentUserEmail)
         }) {
             Image(systemName: "gear")
                 .foregroundColor(.blue)
         }
     }
     
-    func loadImage() {
-        guard let inputImage = inputImage else { return }
-        profileImage = Image(uiImage: inputImage)
-        uploadProfileImage()
-    }
-    
     private var userRating: some View {
         HStack {
             ForEach(0..<5) { index in
-                if(!userReviewModel.averageRating.isNaN || userReviewModel.averageRating.isInfinite){
-                    Image(systemName: index < Int(userReviewModel.averageRating) ? "star.fill" : "star")
+                if !viewModel.userReviewModel.averageRating.isNaN && !viewModel.userReviewModel.averageRating.isInfinite {
+                    Image(systemName: index < Int(viewModel.userReviewModel.averageRating) ? "star.fill" : "star")
                         .foregroundColor(.yellow)
-                }else{
+                } else {
                     Image(systemName: "star")
                 }
             }
-            Text(String(format: "%.1f", userReviewModel.averageRating))
+            Text(String(format: "%.1f", viewModel.userReviewModel.averageRating))
                 .foregroundColor(.secondary)
         }
         .padding(.vertical)
@@ -229,212 +202,13 @@ struct CurrentUserProfileView: View {
         }
     }
     
-    func updateUserProfileImageURL(url: String) {
-        guard let userEmail = Auth.auth().currentUser?.email else { return }
-        
-        db.collection("users").document(userEmail).setData(["profileImageURL": url], merge: true) { error in
-            if let error = error {
-                self.alertMessage = "Error updating profile: \(error.localizedDescription)"
-            } else {
-                self.alertMessage = "Profile picture updated successfully!"
-            }
-            self.showingAlert = true
-        }
-    }
-    
-    
-    func uploadProfileImage() {
-        guard let inputImage = inputImage,
-              let imageData = inputImage.jpegData(compressionQuality: 0.5),
-              let userEmail = Auth.auth().currentUser?.email else { return }
-        
-        let imagePath = "profile_images/\(userEmail).jpg"
-        let imageRef = storage.child(imagePath)
-        
-        // タイムアウト設定: 10秒
-        let timeoutInterval: TimeInterval = 10
-        
-        // タイムアウト処理を設定
-        let workItem = DispatchWorkItem {
-            self.alertMessage = "Request timed out. Please try again."
-            self.showingAlert = true
-        }
-        
-        // タイムアウトをスケジュール
-        DispatchQueue.main.asyncAfter(deadline: .now() + timeoutInterval, execute: workItem)
-        
-        // Firebase Storageへのアップロードリクエスト
-        imageRef.putData(imageData, metadata: nil) { metadata, error in
-            // タイムアウト処理が実行されないようにキャンセル
-            workItem.cancel()
-            
-            if let error = error {
-                self.alertMessage = "Error uploading image: \(error.localizedDescription)"
-                self.showingAlert = true
-            } else {
-                imageRef.downloadURL { url, error in
-                    if let downloadURL = url {
-                        self.updateUserProfileImageURL(url: downloadURL.absoluteString)
-                    } else if let error = error {
-                        self.alertMessage = "Error getting download URL: \(error.localizedDescription)"
-                        self.showingAlert = true
-                    }
-                }
-            }
-        }
-    }
-    
-    
-    
-    func fetchUserData() {
-        guard let user = Auth.auth().currentUser else {
-            print("No user is currently logged in")
-            isLoading = false
-            return
-        }
-        print("email \(String(describing: user.email))")
-        let db = Firestore.firestore()
-        db.collection("users").whereField("email", isEqualTo: user.email ?? "")
-            .getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                    isLoading = false
-                    return
-                }
-                
-                guard let document = querySnapshot?.documents.first else {
-                    print("No matching document")
-                    isLoading = false
-                    return
-                }
-                
-                if let name = document.data()["name"] as? String {
-                    self.userName = name
-                }
-                if let address = document.data()["location"] as? String {
-                    self.address = address
-                }
-                if let profileImageURL = document.data()["profileImageURL"] as? String {
-                    self.loadProfileImage(from: profileImageURL)
-                }
-                if let intro = document.data()["introduction"] as? String {
-                    self.introduction = intro
-                }
-                
-                // 全ての処理が完了したらisLoadingをfalseに設定
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                }
-            }
-    }
-    
-    func saveIntroduction() {
-        guard let userEmail = Auth.auth().currentUser?.email else { return }
-        
-        db.collection("users").document(userEmail).setData(["introduction": introduction], merge: true) { error in
-            if let error = error {
-                self.alertMessage = "Error saving introduction: \(error.localizedDescription)"
-                self.showingAlert = true
-            } else {
-                self.alertMessage = "Introduction saved successfully!"
-                self.showingAlert = true
-            }
-        }
-    }
-    
-    func loadProfileImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let data = data, let uiImage = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.profileImage = Image(uiImage: uiImage)
-                }
-            }
-        }.resume()
-    }
-    
-    func loadUserData() {
-        if let user = Auth.auth().currentUser {
-            self.currentUserEmail = user.email ?? "No Email"
-            fetchUserLocation()
-        }
-    }
-    
-    func fetchUserLocation() {
-        guard let userEmail = Auth.auth().currentUser?.email else { return }
-        
-        db.collection("users").document(userEmail).getDocument { document, error in
-            if let document = document, document.exists {
-                if let latitude = document.data()?["latitude"] as? Double,
-                   let longitude = document.data()?["longitude"] as? Double {
-                    self.userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                    self.region.center = self.userLocation
-                }
-                if let savedAddress = document.data()?["address"] as? String {
-                    self.address = savedAddress
-                }
-            }
-        }
-    }
-    
-    func updateLocation() {
-        address = countryAddress + " " + cityAddress
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(address) { placemarks, error in
-            if let error = error {
-                self.alertMessage = "Error: \(error.localizedDescription)"
-                self.showingAlert = true
-                return
-            }
-            
-            guard let placemark = placemarks?.first,
-                  let location = placemark.location else {
-                self.alertMessage = "Could not find location for the given address."
-                self.showingAlert = true
-                return
-            }
-            
-            self.userLocation = location.coordinate
-            self.region.center = self.userLocation
-            
-            saveLocationToFirestore(location: location.coordinate)
-        }
-    }
-    
-    func saveLocationToFirestore(location: CLLocationCoordinate2D) {
-        guard let userEmail = Auth.auth().currentUser?.email else { return }
-        
-        let userData: [String: Any] = [
-            "latitude": location.latitude,
-            "longitude": location.longitude,
-            "location": address
-        ]
-        
-        db.collection("users").document(userEmail).setData(userData, merge: true) { error in
-            if let error = error {
-                self.alertMessage = "Error saving location: \(error.localizedDescription)"
-            } else {
-                self.alertMessage = "Location updated successfully!"
-            }
-            self.showingAlert = true
-        }
-    }
-    
     func signOut() {
         do {
             try Auth.auth().signOut()
             dismiss()
-            //self.isSignedIn = false
         } catch let signOutError as NSError {
             print("Error signing out: \(signOutError.localizedDescription)")
         }
-    }
-    
-    // 削除アクションの実装
-    func deleteTip(_ tip: TravelTip) {
-        selectedTip = tip
-        showingDeleteConfirmation = true
     }
 }
 
@@ -474,6 +248,9 @@ struct ImagePicker: UIViewControllerRepresentable {
 struct ProfileHeader: View {
     let profileImage: Image?
     let userName: String
+    let postsCount: Int
+    let followersCount: Int
+    let onFollowersTapped: () -> Void  // Callback when followers are tapped
     
     var body: some View {
         VStack {
@@ -496,6 +273,34 @@ struct ProfileHeader: View {
             Text(userName)
                 .font(.title)
                 .fontWeight(.bold)
+            
+            HStack(spacing: 40) {
+                VStack {
+                    Text("\(postsCount)")
+                        .font(.headline)
+                    Text("Posts")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Divider()
+                    .frame(height: 40)
+                
+                Button(action: {
+                    onFollowersTapped()
+                }) {
+                    VStack {
+                        Text("\(followersCount)")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        Text("Followers")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .padding(.top, 8)
         }
     }
 }
@@ -565,4 +370,3 @@ struct SecondaryButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }
-

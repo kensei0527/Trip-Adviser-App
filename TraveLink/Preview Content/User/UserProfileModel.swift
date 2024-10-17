@@ -20,6 +20,7 @@ class UserProfileViewModel: ObservableObject {
     @Published var userIntroduction: String = ""
     @Published var averageRating: Double = 0.0
     @Published var posts: [TravelTip] = [] // 追加: ユーザーの投稿を保持
+    @Published var followers: [User] = []
     
     private var db = Firestore.firestore()
     private var chatCreationViewModel = ChatCreationViewModel()
@@ -31,6 +32,7 @@ class UserProfileViewModel: ObservableObject {
         fetchUserIntroduction()
         checkFollowStatus()
         fetchUserPosts() // 追加: ユーザーの投稿を取得
+        fetchFollowers()
     }
     
     func createAndStartChat() {
@@ -290,5 +292,65 @@ class UserProfileViewModel: ObservableObject {
                     }
                 }
             }
+    }
+    
+    func fetchFollowers() {
+        db.collection("followers").document(user.email).getDocument { [weak self] (document, error) in
+            if let error = error {
+                print("Error fetching followers: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let document = document, document.exists else {
+                print("Followers document does not exist for user: \(self?.user.email ?? "")")
+                self?.followers = []
+                return
+            }
+            
+            let followerEmails = document.data()?["followers"] as? [String] ?? []
+            
+            guard !followerEmails.isEmpty else {
+                self?.followers = []
+                return
+            }
+            
+            // Firestore の 'in' クエリは最大 10 個までの値しか受け付けないため、必要に応じてバッチ処理を行います。
+            let batches = stride(from: 0, to: followerEmails.count, by: 10).map {
+                Array(followerEmails[$0..<min($0 + 10, followerEmails.count)])
+            }
+            
+            var fetchedFollowers: [User] = []
+            let group = DispatchGroup()
+            
+            for batch in batches {
+                group.enter()
+                self?.db.collection("users").whereField(FieldPath.documentID(), in: batch).getDocuments { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error fetching users: \(err.localizedDescription)")
+                        group.leave()
+                        return
+                    }
+                    
+                    if let documents = querySnapshot?.documents {
+                        for doc in documents {
+                            let data = doc.data()
+                            let email = doc.documentID
+                            let id = document.documentID
+                            let name = data["name"] as? String ?? ""
+                            let location = data["location"] as? String ?? ""
+                            let profileImageURLString = data["profileImageURL"] as? String ?? ""
+                            let profileImageURL = URL(string: profileImageURLString)
+                            let user = User(id: id, name: name, email: email, location: location, profileImageURL: profileImageURL)
+                            fetchedFollowers.append(user)
+                        }
+                    }
+                    group.leave()
+                }
+            }
+            
+            group.notify(queue: .main) {
+                self?.followers = fetchedFollowers
+            }
+        }
     }
 }

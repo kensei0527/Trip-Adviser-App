@@ -16,6 +16,7 @@ struct UserListView: View {
     @StateObject var followRequestViewModel = FollowRequestViewModel()
     @State private var currentUserEmail: String?
     @State private var searchText = ""
+    @State private var username: String = ""
     
     var body: some View {
         NavigationView {
@@ -37,7 +38,12 @@ struct UserListView: View {
                                     ForEach(followRequestViewModel.followRequests) { request in
                                         FollowRequestCard(request: request, onApprove: {
                                             followRequestViewModel.approveFollowRequest(request)
-                                        })
+                                        }, username: username)
+                                        .onAppear{
+                                            viewModel.fetchUserByEmail(request.fromEmail){ user in
+                                                username = user?.name ?? "Unknown User"
+                                            }
+                                        }
                                     }
                                 }
                                 .padding(.horizontal)
@@ -73,6 +79,7 @@ struct UserListView: View {
                 if let email = self.currentUserEmail {
                     followRequestViewModel.loadFollowRequests(forUser: email)
                 }
+                
             }
         }
     }
@@ -119,6 +126,7 @@ struct SearchBar: View {
 struct FollowRequestCard: View {
     let request: FollowRequest
     let onApprove: () -> Void
+    let username: String
     
     var body: some View {
         VStack {
@@ -128,7 +136,7 @@ struct FollowRequestCard: View {
                 .frame(width: 50, height: 50)
                 .foregroundColor(.blue)
             
-            Text(request.fromEmail)
+            Text(username)
                 .font(.caption)
                 .lineLimit(1)
             
@@ -142,12 +150,14 @@ struct FollowRequestCard: View {
             .foregroundColor(.white)
             .cornerRadius(15)
         }
+        
         .frame(width: 120)
         .padding()
         .background(Color.white)
         .cornerRadius(10)
         .shadow(radius: 2)
     }
+        
 }
 
 struct UserCard: View {
